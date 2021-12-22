@@ -12,12 +12,12 @@ import { AppService } from './app.service';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
-      port: 5432,
+      port: 15432,
       username: 'user',
-      password: 'password',
+      password: '**password**',
       database: 'shop',
       entities: [Buyer, Order, OrderProduct, Product], //["dist/**/*.entity{.ts,.js}"]
-      synchronize: true,
+      synchronize: false,
     }),
   ],
   controllers: [AppController],
