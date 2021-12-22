@@ -1,5 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Buyer } from './buyers/buyer.entity';
+import { Order } from './orders/order.entity';
+import { OrderProduct } from './orders_products/order_product.entity';
+import { Product } from './products/product.entity';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -12,7 +16,7 @@ import { AppService } from './app.service';
       username: 'user',
       password: 'password',
       database: 'shop',
-      entities: [], //["dist/**/*.entity{.ts,.js}"]
+      entities: [Buyer, Order, OrderProduct, Product], //["dist/**/*.entity{.ts,.js}"]
       synchronize: true,
     }),
   ],
