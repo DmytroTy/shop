@@ -18,7 +18,7 @@ import { AppService } from './app.service';
       username: 'user',
       password: '**password**',
       database: 'shop',
-      entities: [Buyer, Order, OrderProduct, Product], //["dist/**/*.entity{.ts,.js}"]
+      entities: [Buyer, Order, OrderProduct, Product], //["**/*.entity{.ts,.js}"]
       synchronize: false,
     }),
   ],
