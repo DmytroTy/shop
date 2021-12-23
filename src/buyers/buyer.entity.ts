@@ -19,13 +19,14 @@ export class Buyer {
     nullable: true,
     default: null
   })
-  refresh_token: string;
+  refreshToken: string;
 
   @Column({
+    type: "timestamp",
     nullable: true,
     default: null
   })
-  expires_in: Timestamp;
+  expiresIn: Timestamp;
 
   @OneToMany(type => Order, order => order.buyer)
   orders: Order[];
