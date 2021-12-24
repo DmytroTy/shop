@@ -12,11 +12,11 @@ export class OrdersProductsService {
     private ordersProductsRepository: Repository<OrderProduct>,
   ) {}
 
-  async addProducts(addOrdersProductDto: AddOrdersProductDto): Promise<OrderProduct> {
-    return this.ordersProductsRepository.update(addOrdersProductDto);
+  async addProducts(addOrdersProductsDto: AddOrdersProductDto[]): Promise<OrderProduct[]> {
+    return this.ordersProductsRepository.create(addOrdersProductsDto);
   }
 
-  async findProducts(orderId: number): Promise<OrderProduct> {
-    return this.ordersProductsRepository.find(orderId);
+  async findProducts(orderId: number): Promise<OrderProduct[]> {
+    return this.ordersProductsRepository.findByIds([orderId]); // <--Fix it
   }
 }

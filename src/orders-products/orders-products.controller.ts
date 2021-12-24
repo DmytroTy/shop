@@ -10,12 +10,12 @@ export class OrdersProductsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  addProducts(@Body() addOrdersProductDto: AddOrdersProductDto): Promise<OrderProduct> {
-    return this.ordersProductsService.addProducts(addOrdersProductDto);
+  addProducts(@Body() addOrdersProductsDto: AddOrdersProductDto[]): Promise<OrderProduct[]> {
+    return this.ordersProductsService.addProducts(addOrdersProductsDto);
   }
 
   @Get(':orderId')
-  findProducts(@Param('orderId') orderId: string): Promise<OrderProduct> {
+  findProducts(@Param('orderId') orderId: string): Promise<OrderProduct[]> {
     return this.ordersProductsService.findProducts(+orderId);
   }
 }
