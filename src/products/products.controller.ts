@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import { Product } from './product.entity';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -26,7 +26,7 @@ export class ProductsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto): Promise<Product> {
+  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto): Promise<UpdateResult> {
     return this.productsService.update(+id, updateProductDto);
   }
 

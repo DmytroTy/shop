@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import { Buyer } from './buyer.entity';
 import { BuyersService } from './buyers.service';
 import { CreateBuyerDto } from './dto/create-buyer.dto';
@@ -26,7 +26,7 @@ export class BuyersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBuyerDto: UpdateBuyerDto): Promise<Buyer> {
+  update(@Param('id') id: string, @Body() updateBuyerDto: UpdateBuyerDto): Promise<UpdateResult> {
     return this.buyersService.update(+id, updateBuyerDto);
   }
 

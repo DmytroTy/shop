@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import { Order } from './order.entity';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -26,7 +26,7 @@ export class OrdersController {
   }
 
   @Patch(':id/:action')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto): Promise<Order> {
+  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto): Promise<UpdateResult> {
     return this.ordersService.update(+id, updateOrderDto);
   }
 
