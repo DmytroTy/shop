@@ -1,6 +1,6 @@
 export class CreateProductDto {
-  type: string;
-  color: string;
-  price: number;
-  quantity: number;
+  readonly type: string;
+  readonly color: string;
+  readonly price: number;
+  readonly quantity: number;
 }

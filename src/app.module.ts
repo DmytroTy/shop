@@ -20,7 +20,6 @@ import { OrdersProductsModule } from './orders-products/orders-products.module';
       database: 'shop',
       entities: ["dist/**/*.entity{.ts,.js}"],
       synchronize: false,
-      // ??? autoLoadEntities: true,
     }),
     BuyersModule,
     ProductsModule,

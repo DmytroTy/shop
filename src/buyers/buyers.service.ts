@@ -1,26 +1,34 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DeleteResult, Repository } from 'typeorm';
+import { Buyer } from './buyer.entity';
 import { CreateBuyerDto } from './dto/create-buyer.dto';
 import { UpdateBuyerDto } from './dto/update-buyer.dto';
 
 @Injectable()
 export class BuyersService {
-  create(createBuyerDto: CreateBuyerDto) {
-    return 'This action adds a new buyer';
+  constructor(
+    @InjectRepository(Buyer)
+    private buyersRepository: Repository<Buyer>,
+  ) {}
+
+  async create(createBuyerDto: CreateBuyerDto): Promise<Buyer> {
+    return this.buyersRepository.create(createBuyerDto);
   }
 
-  findAll() {
-    return `This action returns all buyers`;
+  async findAll(): Promise<Buyer[]> {
+    return this.buyersRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} buyer`;
+  async findOne(id: number): Promise<Buyer> {
+    return this.buyersRepository.findOne(id);
   }
 
-  update(id: number, updateBuyerDto: UpdateBuyerDto) {
-    return `This action updates a #${id} buyer`;
+  async update(id: number, updateBuyerDto: UpdateBuyerDto): Promise<Buyer> {
+    return this.buyersRepository.update(id, updateBuyerDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} buyer`;
+  async remove(id: number): Promise<DeleteResult> {
+    return this.buyersRepository.delete(id);
   }
 }
