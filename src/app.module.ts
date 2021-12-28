@@ -19,7 +19,14 @@ import { OrdersProductsModule } from './orders-products/orders-products.module';
       password: '**password**',
       database: 'shop',
       entities: ["dist/**/*.entity{.ts,.js}"],
+      // migrations: ["src/migration/*.ts"],
       synchronize: false,
+      logging: false,
+      /* cli: {
+        entitiesDir: "src/**",
+        migrationsDir: "src/migration",
+        // subscribersDir: "src/subscriber"
+      }, */
     }),
     BuyersModule,
     ProductsModule,
