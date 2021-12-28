@@ -12,7 +12,7 @@ export class Product {
   @Column()
   color: string;
 
-  @Column()
+  @Column("decimal")
   price: number;
 
   @Column({ default: 0 })
