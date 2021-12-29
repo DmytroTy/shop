@@ -11,17 +11,7 @@ import { OrdersProductsModule } from './orders-products/orders-products.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 15432,
-      username: 'user',
-      password: '**password**',
-      database: 'shop',
-      entities: ["dist/**/*.entity{.ts,.js}"],
-      synchronize: false,
-      logging: false,
-    }),
+    TypeOrmModule.forRoot(),
     BuyersModule,
     ProductsModule,
     OrdersModule,
