@@ -13,7 +13,7 @@ export class OrdersService {
   ) {}
 
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
-    return this.ordersRepository.create(createOrderDto);
+    return this.ordersRepository.save(createOrderDto);
   }
 
   async findAll(): Promise<Order[]> {

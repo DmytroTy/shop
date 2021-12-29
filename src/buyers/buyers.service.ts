@@ -13,7 +13,7 @@ export class BuyersService {
   ) {}
 
   async create(createBuyerDto: CreateBuyerDto): Promise<Buyer> {
-    return this.buyersRepository.create(createBuyerDto);
+    return this.buyersRepository.save(createBuyerDto);
   }
 
   async findAll(): Promise<Buyer[]> {

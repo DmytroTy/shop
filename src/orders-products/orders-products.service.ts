@@ -13,10 +13,11 @@ export class OrdersProductsService {
   ) {}
 
   async addProducts(addOrdersProductsDto: AddOrdersProductDto[]): Promise<OrderProduct[]> {
-    return this.ordersProductsRepository.create(addOrdersProductsDto);
+    return this.ordersProductsRepository.save(addOrdersProductsDto);
   }
 
   async findProducts(orderId: number): Promise<OrderProduct[]> {
     return this.ordersProductsRepository.findByIds([orderId]); // <--Fix it
+    // return this.ordersProductsRepository.find({ order: orderId });
   }
 }
