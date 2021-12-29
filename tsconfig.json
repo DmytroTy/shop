@@ -6,6 +6,10 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "lib": [
+      "es5",
+      "es6"
+    ],
     "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
