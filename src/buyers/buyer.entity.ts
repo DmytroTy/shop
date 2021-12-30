@@ -28,6 +28,13 @@ export class Buyer {
   })
   expiresIn: Timestamp;
 
+  @Column({
+    type: "timestamp",
+    nullable: true,
+    default: null
+  })
+  deletedAt: Timestamp;
+
   @OneToMany(type => Order, order => order.buyer)
   orders: Order[];
 }

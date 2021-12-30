@@ -1,5 +1,5 @@
 import { Controller, Get, Param, HttpCode, HttpStatus } from '@nestjs/common';
-// import { DeleteResult, UpdateResult } from 'typeorm';
+// import { UpdateResult } from 'typeorm';
 import { Product } from './product.entity';
 import { ProductsService } from './products.service';
 // import { CreateProductDto } from './dto/create-product.dto';
@@ -32,7 +32,7 @@ export class ProductsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string): Promise<DeleteResult> {
+  remove(@Param('id') id: string): Promise<UpdateResult> {
     return this.productsService.remove(+id);
   } */
 }

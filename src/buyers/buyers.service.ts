@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { Buyer } from './buyer.entity';
 import { CreateBuyerDto } from './dto/create-buyer.dto';
 import { UpdateBuyerDto } from './dto/update-buyer.dto';
@@ -24,7 +24,7 @@ export class BuyersService {
     return this.buyersRepository.update(id, updateBuyerDto);
   }
 
-  async remove(id: number): Promise<DeleteResult> {
-    return this.buyersRepository.delete(id);
+  async remove(id: number): Promise<UpdateResult> {
+    return this.buyersRepository.update(id, { deletedAt: new Date() });
   }
 }

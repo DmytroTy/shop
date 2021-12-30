@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Timestamp, OneToMany, ManyToOne } from 'typeorm';
 import { Buyer } from '../buyers/buyer.entity';
 import { OrderProduct } from '../orders-products/order-product.entity';
 
@@ -19,6 +19,13 @@ export class Order {
     default: StatusType.OPENLY
   })
   status: StatusType;
+
+  @Column({
+    type: "timestamp",
+    nullable: true,
+    default: null
+  })
+  deletedAt: Timestamp;
 
   @ManyToOne(type => Buyer, buyer => buyer.orders)
   buyer: Buyer;
