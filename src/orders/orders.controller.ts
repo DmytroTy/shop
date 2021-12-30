@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, HttpCode, HttpStatus } from '@nestjs/common';
 import { UpdateResult } from 'typeorm';
 import { Order } from './order.entity';
 import { OrdersService } from './orders.service';
@@ -28,11 +28,11 @@ export class OrdersController {
   @Patch(':id/:action')
   update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto): Promise<UpdateResult> {
     return this.ordersService.update(+id, updateOrderDto);
-  }
+  }/* 
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string): Promise<UpdateResult> {
     return this.ordersService.remove(+id);
-  }
+  } */
 }
