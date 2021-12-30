@@ -17,7 +17,6 @@ export class OrdersProductsService {
   }
 
   async findProducts(orderId: number): Promise<OrderProduct[]> {
-    return this.ordersProductsRepository.findByIds([orderId]); // <--Fix it
-    // return this.ordersProductsRepository.find({ order: orderId });
+    return this.ordersProductsRepository.find({ where: { orderId } });
   }
 }
