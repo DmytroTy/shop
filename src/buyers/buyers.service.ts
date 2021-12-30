@@ -16,10 +16,6 @@ export class BuyersService {
     return this.buyersRepository.save(createBuyerDto);
   }
 
-  async findAll(): Promise<Buyer[]> {
-    return this.buyersRepository.find();
-  }
-
   async findOne(id: number): Promise<Buyer> {
     return this.buyersRepository.findOne(id);
   }
