@@ -7,6 +7,7 @@ import { Buyer } from './buyer.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Buyer])],
   controllers: [BuyersController],
-  providers: [BuyersService]
+  providers: [BuyersService],
+  exports: [BuyersService]
 })
 export class BuyersModule {}

@@ -16,8 +16,8 @@ export class BuyersService {
     return this.buyersRepository.save(createBuyerDto);
   }
 
-  async findOne(id: number): Promise<Buyer> {
-    return this.buyersRepository.findOne(id);
+  async findOne(username: string): Promise<Buyer> {
+    return this.buyersRepository.findOne({ username });
   }
 
   async update(id: number, updateBuyerDto: UpdateBuyerDto): Promise<UpdateResult> {
