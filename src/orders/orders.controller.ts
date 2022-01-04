@@ -28,11 +28,5 @@ export class OrdersController {
   @Patch(':id/:action')
   update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto): Promise<UpdateResult> {
     return this.ordersService.update(+id, updateOrderDto);
-  }/* 
-
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string): Promise<UpdateResult> {
-    return this.ordersService.remove(+id);
-  } */
+  }
 }

@@ -1,19 +1,10 @@
-import { Controller, Get, Param, HttpCode, HttpStatus } from '@nestjs/common';
-// import { UpdateResult } from 'typeorm';
+import { Controller, Get, Param } from '@nestjs/common';
 import { Product } from './product.entity';
 import { ProductsService } from './products.service';
-// import { CreateProductDto } from './dto/create-product.dto';
-// import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
-
-  /* @Post()
-  @HttpCode(HttpStatus.CREATED)
-  create(@Body() createProductDto: CreateProductDto): Promise<Product> {
-    return this.productsService.create(createProductDto);
-  } */
 
   @Get()
   findAll(): Promise<Product[]> {
@@ -24,15 +15,4 @@ export class ProductsController {
   findOne(@Param('id') id: string): Promise<Product> {
     return this.productsService.findOne(+id);
   }
-
-  /* @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto): Promise<UpdateResult> {
-    return this.productsService.update(+id, updateProductDto);
-  }
-
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string): Promise<UpdateResult> {
-    return this.productsService.remove(+id);
-  } */
 }
