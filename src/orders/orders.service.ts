@@ -21,7 +21,7 @@ export class OrdersService {
   }
 
   async findOne(id: number): Promise<Order> {
-    return this.ordersRepository.findOne(id);
+    return this.ordersRepository.findOne(id, { relations: ["ordersProducts"] });
   }
 
   async update(id: number, updateOrderDto: UpdateOrderDto): Promise<UpdateResult> {
