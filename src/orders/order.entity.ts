@@ -1,12 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, Timestamp, OneToMany, ManyToOne } from 'typeorm';
 import { Buyer } from '../buyers/buyer.entity';
 import { OrderProduct } from '../orders-products/order-product.entity';
-
-export enum StatusType {
-  OPENLY = "openly",
-  PROCESSED = "processed",
-  CANCELED = "canceled"
-}
+import { Status } from '../enums/status.enum';
 
 @Entity()
 export class Order {
@@ -15,10 +10,10 @@ export class Order {
 
   @Column({
     type: "enum",
-    enum: StatusType,
-    default: StatusType.OPENLY
+    enum: Status,
+    default: Status.OPENLY
   })
-  status: StatusType;
+  status: Status;
 
   @Column({
     type: "timestamp",

@@ -1,7 +1,7 @@
 import { Controller, Get, Request, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/guards/local-auth.guard';
-import { SkipAuth } from './skip-auth.decorator';
+import { SkipAuth } from './decorators/skip-auth.decorator';
 
 @Controller()
 export class AppController {
