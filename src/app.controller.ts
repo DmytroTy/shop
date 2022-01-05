@@ -1,17 +1,28 @@
-import { Controller, Get, Request, Post, UseGuards } from '@nestjs/common';
+import { Controller, Body, Get, Request, Post, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/guards/local-auth.guard';
 import { SkipAuth } from './decorators/skip-auth.decorator';
+import { BuyersService } from './buyers/buyers.service';
+import { CreateBuyerDto } from './buyers/dto/create-buyer.dto';
 
 @Controller()
 export class AppController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private buyersService: BuyersService) {}
 
   @SkipAuth()
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   async login(@Request() req) {
     return this.authService.login(req.user);
+  }
+
+  @SkipAuth()
+  @Post('auth/register')
+  @HttpCode(HttpStatus.CREATED)
+  async register(@Body() createBuyerDto: CreateBuyerDto) {
+    const buyer = await this.buyersService.create(createBuyerDto);
+    const { password, deletedAt, ...result } = buyer;
+    return result;
   }
 
   @Get('profile')
