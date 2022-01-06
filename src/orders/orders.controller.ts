@@ -1,10 +1,12 @@
 import { Controller, Get, Post, Body, Patch, Param, HttpCode, HttpStatus } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { UpdateResult } from 'typeorm';
 import { Order } from './order.entity';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 
+@ApiBearerAuth()
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}

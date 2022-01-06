@@ -1,8 +1,10 @@
 import { Controller, Body, Patch, Param } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { UpdateResult } from 'typeorm';
 import { BuyersService } from './buyers.service';
 import { UpdateBuyerDto } from './dto/update-buyer.dto';
 
+@ApiBearerAuth()
 @Controller('buyers')
 export class BuyersController {
   constructor(private readonly buyersService: BuyersService) {}

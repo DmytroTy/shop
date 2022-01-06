@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { BuyersService } from '../buyers/buyers.service';
 import * as bcrypt from 'bcrypt';
+import { BuyersService } from '../buyers/buyers.service';
 
 @Injectable()
 export class AuthService {

@@ -1,10 +1,11 @@
 import { Controller, Body, Get, Request, Post, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import * as bcrypt from 'bcrypt';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/guards/local-auth.guard';
 import { SkipAuth } from './decorators/skip-auth.decorator';
 import { BuyersService } from './buyers/buyers.service';
 import { CreateBuyerDto } from './buyers/dto/create-buyer.dto';
-import * as bcrypt from 'bcrypt';
 
 @Controller()
 export class AppController {
@@ -31,6 +32,7 @@ export class AppController {
     return result;
   }
 
+  @ApiBearerAuth()
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
