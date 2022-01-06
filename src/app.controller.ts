@@ -4,6 +4,7 @@ import { LocalAuthGuard } from './auth/guards/local-auth.guard';
 import { SkipAuth } from './decorators/skip-auth.decorator';
 import { BuyersService } from './buyers/buyers.service';
 import { CreateBuyerDto } from './buyers/dto/create-buyer.dto';
+import * as bcrypt from 'bcrypt';
 
 @Controller()
 export class AppController {
@@ -20,8 +21,13 @@ export class AppController {
   @Post('auth/register')
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() createBuyerDto: CreateBuyerDto) {
+    const saltOrRounds = 10;
+    const pass = createBuyerDto.password;
+    createBuyerDto.password = await bcrypt.hash(pass, saltOrRounds);
+
     const buyer = await this.buyersService.create(createBuyerDto);
     const { password, deletedAt, ...result } = buyer;
+
     return result;
   }
 
