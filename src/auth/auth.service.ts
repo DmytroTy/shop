@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { BuyersService } from '../buyers/buyers.service';
+import { CreateBuyerDto } from '../buyers/dto/create-buyer.dto';
 
 @Injectable()
 export class AuthService {
@@ -26,5 +27,16 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async register(createBuyerDto: CreateBuyerDto) {
+    const saltOrRounds = 10;
+    const pass = createBuyerDto.password;
+    createBuyerDto.password = await bcrypt.hash(pass, saltOrRounds);
+
+    const buyer = await this.buyersService.create(createBuyerDto);
+    const { password, deletedAt, ...result } = buyer;
+
+    return result;
   }
 }
