@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Timestamp, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
 import { Buyer } from '../buyers/buyer.entity';
 import { OrderProduct } from '../orders-products/order-product.entity';
 import { Status } from '../enums/status.enum';
@@ -15,12 +15,8 @@ export class Order {
   })
   status: Status;
 
-  @Column({
-    type: "timestamp",
-    nullable: true,
-    default: null
-  })
-  deletedAt: Timestamp;
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @ManyToOne(type => Buyer, buyer => buyer.orders)
   buyer: Buyer;

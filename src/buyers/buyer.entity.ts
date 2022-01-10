@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Timestamp, OneToMany } from 'typeorm';
+import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Order } from '../orders/order.entity';
 
 @Entity()
@@ -26,14 +26,10 @@ export class Buyer {
     nullable: true,
     default: null
   })
-  expiresIn: Timestamp;
+  expiresIn: Date;
 
-  @Column({
-    type: "timestamp",
-    nullable: true,
-    default: null
-  })
-  deletedAt: Timestamp;
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @OneToMany(type => Order, order => order.buyer)
   orders: Order[];

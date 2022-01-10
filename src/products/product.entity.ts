@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Timestamp, OneToMany } from 'typeorm';
+import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { OrderProduct } from '../orders-products/order-product.entity';
 
 @Entity()
@@ -18,12 +18,8 @@ export class Product {
   @Column({ default: 0 })
   quantity: number;
 
-  @Column({
-    type: "timestamp",
-    nullable: true,
-    default: null
-  })
-  deletedAt: Timestamp;
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @OneToMany(type => OrderProduct, orderProduct => orderProduct.product)
   ordersProducts: OrderProduct[];

@@ -29,6 +29,6 @@ export class OrdersService {
   }
 
   async remove(id: number): Promise<UpdateResult> {
-    return this.ordersRepository.update(id, { deletedAt: new Date() });
+    return this.ordersRepository.softDelete(id);
   }
 }

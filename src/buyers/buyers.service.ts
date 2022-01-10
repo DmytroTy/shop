@@ -25,6 +25,6 @@ export class BuyersService {
   }
 
   async remove(id: number): Promise<UpdateResult> {
-    return this.buyersRepository.update(id, { deletedAt: new Date() });
+    return this.buyersRepository.softDelete(id);
   }
 }
