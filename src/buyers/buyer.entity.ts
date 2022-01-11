@@ -1,5 +1,5 @@
 import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { ApiHideProperty, ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Order } from '../orders/order.entity';
 
 @Entity()
@@ -16,7 +16,7 @@ export class Buyer {
   @Column()
   username: string;
 
-  @ApiProperty()
+  @ApiHideProperty()
   @Column()
   password: string;
 
@@ -39,7 +39,6 @@ export class Buyer {
   @DeleteDateColumn()
   deletedAt?: Date;
 
-  @ApiPropertyOptional({ type: () => [Order] })
   @OneToMany(type => Order, order => order.buyer)
   orders?: Order[];
 }
