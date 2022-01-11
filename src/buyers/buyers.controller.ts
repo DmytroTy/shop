@@ -1,15 +1,22 @@
 import { Controller, Body, Patch, Param } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiAcceptedResponse, ApiBearerAuth, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { UpdateResult } from 'typeorm';
+import { Buyer } from './buyer.entity';
 import { BuyersService } from './buyers.service';
 import { UpdateBuyerDto } from './dto/update-buyer.dto';
 
+@ApiTags('buyers')
 @ApiBearerAuth()
 @Controller('buyers')
 export class BuyersController {
   constructor(private readonly buyersService: BuyersService) {}
 
   @Patch(':id')
+  @ApiAcceptedResponse({
+    description: 'The record of buyer has been successfully updated.',
+    type: Buyer,
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
   update(@Param('id') id: string, @Body() updateBuyerDto: UpdateBuyerDto): Promise<UpdateResult> {
     return this.buyersService.update(+id, updateBuyerDto);
   }
