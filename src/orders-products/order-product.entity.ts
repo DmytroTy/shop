@@ -12,7 +12,7 @@ export class OrderProduct {
   @PrimaryColumn({ type: "int" })
   order: Order;
 
-  @ManyToOne(type => Product, product => product.ordersProducts)
+  @ManyToOne(type => Product)
   @JoinColumn()
   @PrimaryColumn({ type: "int" })
   product: Product;
