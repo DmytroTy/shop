@@ -1,7 +1,7 @@
-import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Buyer } from '../buyers/buyer.entity';
-import { OrderProduct } from '../orders-products/order-product.entity';
+import { Product } from '../products/product.entity';
 import { Status } from '../enums/status.enum';
 
 @Entity()
@@ -24,7 +24,7 @@ export class Order {
   @ManyToOne(type => Buyer, buyer => buyer.orders)
   buyer: Buyer;
 
-  @ApiProperty({ type: () => [OrderProduct] })
-  @OneToMany(type => OrderProduct, orderProduct => orderProduct.order)
-  ordersProducts: OrderProduct[];
+  @ApiProperty({ type: [Product] })
+  @Column("simple-json")
+  orderProducts: Product[]; // [{ id: number, type: string, color: string, price: number, quantity: number }];
 }

@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiAcceptedResponse, ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Patch, Param, HttpCode, HttpStatus, Request } from '@nestjs/common';
+import { ApiAcceptedResponse, ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { UpdateResult } from 'typeorm';
 import { Order } from './order.entity';
 import { OrdersService } from './orders.service';
-import { CreateOrderDto } from './dto/create-order.dto';
+import { AddOrderProductDto } from './dto/add-order-product.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 
 @ApiTags('orders')
@@ -19,8 +19,9 @@ export class OrdersController {
     type: Order,
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
-  create(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
-    return this.ordersService.create(createOrderDto);
+  @ApiBody({ type: [AddOrderProductDto] })
+  create(@Body() addOrderProductsDto: AddOrderProductDto[], @Request() req): Promise<Order> {
+    return this.ordersService.create(addOrderProductsDto, req.userId);
   }
 
   @Get()
