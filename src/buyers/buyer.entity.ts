@@ -1,5 +1,5 @@
 import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Order } from '../orders/order.entity';
 
 @Entity()
@@ -16,18 +16,15 @@ export class Buyer {
   @Column()
   username: string;
 
-  @ApiHideProperty()
   @Column()
   password: string;
 
-  @ApiHideProperty()
   @Column({
     nullable: true,
     default: null
   })
   refreshToken?: string;
 
-  @ApiHideProperty()
   @Column({
     type: "timestamp",
     nullable: true,
@@ -35,7 +32,6 @@ export class Buyer {
   })
   expiresIn?: Date;
 
-  @ApiHideProperty()
   @DeleteDateColumn()
   deletedAt?: Date;
 

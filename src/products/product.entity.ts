@@ -1,5 +1,5 @@
 import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn } from 'typeorm';
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class Product {
@@ -23,7 +23,6 @@ export class Product {
   @Column({ default: 0 })
   quantity: number;
 
-  @ApiHideProperty()
   @DeleteDateColumn()
   deletedAt?: Date;
 }

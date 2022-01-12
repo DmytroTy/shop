@@ -1,5 +1,5 @@
 import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Buyer } from '../buyers/buyer.entity';
 import { OrderProduct } from '../orders-products/order-product.entity';
 import { Status } from '../enums/status.enum';
@@ -18,11 +18,9 @@ export class Order {
   })
   status: Status;
 
-  @ApiHideProperty()
   @DeleteDateColumn()
   deletedAt?: Date;
 
-  @ApiHideProperty()
   @ManyToOne(type => Buyer, buyer => buyer.orders)
   buyer: Buyer;
 
