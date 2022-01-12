@@ -5,11 +5,15 @@ import { LocalAuthGuard } from './auth/guards/local-auth.guard';
 import { SkipAuth } from './decorators/skip-auth.decorator';
 import { Buyer } from './buyers/buyer.entity';
 import { CreateBuyerDto } from './buyers/dto/create-buyer.dto';
+import { BuyersService } from './buyers/buyers.service';
 
 @ApiTags('auth')
 @Controller()
 export class AppController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private buyersService: BuyersService,
+  ) {}
 
   @SkipAuth()
   @UseGuards(LocalAuthGuard)
@@ -62,7 +66,9 @@ export class AppController {
     type: Buyer,
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
-  getProfile(@Request() req) {
-    return req.user;
+  async getProfile(@Request() req) {
+    const user = await this.buyersService.findOne(req.user.email);
+    const { password, deletedAt, ...result } = user;
+    return result;
   }
 }
