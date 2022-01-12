@@ -1,4 +1,4 @@
-import { Controller, Body, Patch, Param } from '@nestjs/common';
+import { Body, Controller, Param, Patch, Request } from '@nestjs/common';
 import { ApiAcceptedResponse, ApiBearerAuth, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { UpdateResult } from 'typeorm';
 import { Buyer } from './buyer.entity';
@@ -17,7 +17,7 @@ export class BuyersController {
     type: Buyer,
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
-  update(@Param('id') id: string, @Body() updateBuyerDto: UpdateBuyerDto): Promise<UpdateResult> {
-    return this.buyersService.update(+id, updateBuyerDto);
+  update(@Param('id') id: string, @Body() updateBuyerDto: UpdateBuyerDto, @Request() req): Promise<UpdateResult> {
+    return this.buyersService.update(+id, updateBuyerDto, req.user.userId);
   }
 }

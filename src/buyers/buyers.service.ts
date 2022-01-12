@@ -20,8 +20,8 @@ export class BuyersService {
     return this.buyersRepository.findOne({ email });
   }
 
-  async update(id: number, updateBuyerDto: UpdateBuyerDto): Promise<UpdateResult> {
-    return this.buyersRepository.update(id, updateBuyerDto);
+  async update(id: number, updateBuyerDto: UpdateBuyerDto, userId: number): Promise<UpdateResult> {
+    return this.buyersRepository.update(userId, updateBuyerDto);
   }
 
   async remove(id: number): Promise<UpdateResult> {

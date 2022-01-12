@@ -1,5 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, HttpCode, HttpStatus, Request } from '@nestjs/common';
-import { ApiAcceptedResponse, ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Request } from '@nestjs/common';
+import { ApiAcceptedResponse, ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { UpdateResult } from 'typeorm';
 import { Order } from './order.entity';
 import { OrdersService } from './orders.service';
@@ -21,7 +21,7 @@ export class OrdersController {
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
   @ApiBody({ type: [AddOrderProductDto] })
   create(@Body() addOrderProductsDto: AddOrderProductDto[], @Request() req): Promise<Order> {
-    return this.ordersService.create(addOrderProductsDto, req.userId);
+    return this.ordersService.create(addOrderProductsDto, req.user.userId);
   }
 
   @Get()
@@ -29,8 +29,8 @@ export class OrdersController {
     description: 'Get all orders.',
     type: [Order],
   })
-  findAll(): Promise<Order[]> {
-    return this.ordersService.findAll();
+  findAll(@Request() req): Promise<Order[]> {
+    return this.ordersService.findAll(req.user.userId);
   }
 
   @Get(':id')
@@ -39,8 +39,8 @@ export class OrdersController {
     type: Order,
   })
   @ApiNotFoundResponse({ description: 'No record of order with this ID found!' })
-  findOne(@Param('id') id: string): Promise<Order> {
-    return this.ordersService.findOne(+id);
+  findOne(@Param('id') id: string, @Request() req): Promise<Order> {
+    return this.ordersService.findOne(+id, req.user.userId);
   }
 
   @Patch(':id/:action')
@@ -49,7 +49,8 @@ export class OrdersController {
     type: Order,
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto): Promise<UpdateResult> {
-    return this.ordersService.update(+id, updateOrderDto);
+  @ApiForbiddenResponse({ description: 'Forbidden!'})
+  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto, @Request() req): Promise<UpdateResult> {
+    return this.ordersService.update(+id, updateOrderDto, req.user.userId);
   }
 }
