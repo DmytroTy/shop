@@ -18,7 +18,7 @@ export class AppController {
   @SkipAuth()
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'User successfully logined.',
     schema: {
       type: 'object',
