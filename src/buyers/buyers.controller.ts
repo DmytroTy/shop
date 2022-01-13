@@ -1,5 +1,5 @@
 import { Body, Controller, Param, Patch, Request } from '@nestjs/common';
-import { ApiAcceptedResponse, ApiBearerAuth, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiBearerAuth, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { UpdateResult } from 'typeorm';
 import { Buyer } from './buyer.entity';
 import { BuyersService } from './buyers.service';
@@ -12,7 +12,7 @@ export class BuyersController {
   constructor(private readonly buyersService: BuyersService) {}
 
   @Patch(':id')
-  @ApiAcceptedResponse({
+  @ApiOkResponse({
     description: 'The record of buyer has been successfully updated.',
     type: Buyer,
   })

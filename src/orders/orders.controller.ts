@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Request } from '@nestjs/common';
-import { ApiAcceptedResponse, ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { UpdateResult } from 'typeorm';
 import { Order } from './order.entity';
 import { OrdersService } from './orders.service';
@@ -43,8 +43,8 @@ export class OrdersController {
     return this.ordersService.findOne(+id, req.user.userId);
   }
 
-  @Patch(':id/:action')
-  @ApiAcceptedResponse({
+  @Patch(':id')
+  @ApiOkResponse({
     description: 'The record of order has been successfully updated.',
     type: Order,
   })
