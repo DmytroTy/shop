@@ -17,11 +17,11 @@ export class ProductsService {
   }
 
   async findAll(): Promise<Product[]> {
-    return this.productsRepository.find();
+    return this.productsRepository.find({ select: ["id", "type", "color", "price", "quantity"] });
   }
 
   async findOne(id: number): Promise<Product> {
-    return this.productsRepository.findOne(id);
+    return this.productsRepository.findOne(id, { select: ["id", "type", "color", "price", "quantity"] });
   }
 
   async update(id: number, updateProductDto: UpdateProductDto): Promise<UpdateResult> {

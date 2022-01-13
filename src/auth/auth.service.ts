@@ -16,7 +16,7 @@ export class AuthService {
     const isMatch = user ? await bcrypt.compare(pass, user.password) : false;
 
     if (isMatch) {
-      const { password, deletedAt, ...result } = user;
+      const { password, ...result } = user;
       return result;
     }
     return null;

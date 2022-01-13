@@ -20,11 +20,17 @@ export class OrdersService {
   }
 
   async findAll(userId: number): Promise<Order[]> {
-    return this.ordersRepository.find({ where: { buyer: { id: userId } } });
+    return this.ordersRepository.find({
+      select: ["id", "status", "orderProducts"],
+      where: { buyer: { id: userId } },
+    });
   }
 
   async findOne(id: number, userId: number): Promise<Order> {
-    return this.ordersRepository.findOne(id, { where: { buyer: { id: userId } } });
+    return this.ordersRepository.findOne(id, {
+      select: ["id", "status", "orderProducts"],
+      where: { buyer: { id: userId } },
+    });
   }
 
   async update(id: number, updateOrderDto: UpdateOrderDto, userId: number): Promise<UpdateResult> {

@@ -68,7 +68,7 @@ export class AppController {
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
   async getProfile(@Request() req) {
     const user = await this.buyersService.findOne(req.user.email);
-    const { password, deletedAt, ...result } = user;
+    const { password, ...result } = user;
     return result;
   }
 }
