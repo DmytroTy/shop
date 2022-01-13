@@ -26,5 +26,5 @@ export class Order {
 
   @ApiProperty({ type: [Product] })
   @Column("simple-json")
-  orderProducts: Product[]; // [{ id: number, type: string, color: string, price: number, quantity: number }];
+  orderProducts: Product[];
 }
