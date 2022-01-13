@@ -14,21 +14,21 @@ export class OrdersService {
 
   async create(addOrderProductsDto: AddOrderProductDto[], userId: number): Promise<Order> {
     return this.ordersRepository.save({
-      buyerId: userId,
+      buyer: { id: userId },
       orderProducts: addOrderProductsDto,
     });
   }
 
   async findAll(userId: number): Promise<Order[]> {
-    return this.ordersRepository.find({ where: { buyerId: userId } });
+    return this.ordersRepository.find({ where: { buyer: { id: userId } } });
   }
 
   async findOne(id: number, userId: number): Promise<Order> {
-    return this.ordersRepository.findOne(id, { where: { buyerId: userId } });
+    return this.ordersRepository.findOne(id, { where: { buyer: { id: userId } } });
   }
 
   async update(id: number, updateOrderDto: UpdateOrderDto, userId: number): Promise<UpdateResult> {
-    const order = await this.ordersRepository.findOne(id, { where: { buyerId: userId } });
+    const order = await this.ordersRepository.findOne(id, { where: { buyer: { id: userId } } });
     if (order) {
       return this.ordersRepository.update(id, updateOrderDto);
     } else {
