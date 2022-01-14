@@ -5,7 +5,7 @@ import { MockJwtService } from '../testing/mock.jwt.service';
 import { AuthService } from './auth.service';
 import { Buyer } from '../buyers/buyer.entity';
 import { BuyersService } from '../buyers/buyers.service';
-import { MockRepository } from '../buyers/testing/mock.repository';
+import { MockBuyerRepository } from '../buyers/testing/mock.buyer.repository';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -18,7 +18,7 @@ describe('AuthService', () => {
         BuyersService,
         {
           provide: getRepositoryToken(Buyer),
-          useClass: MockRepository,
+          useClass: MockBuyerRepository,
         },
         {
           provide: JwtService,
@@ -39,21 +39,19 @@ describe('AuthService', () => {
     it('a valid e-mail address and password have been passed - must return the user object', async () => {
       const email = 'test@test.com';
       const pass = 'test';
-      // jest.spyOn(buyersService, 'findOne').mockImplementation(() => Promise.resolve(buyer));
-
       expect(await authService.validateUser(email, pass)).toEqual({ id: 1, username: 'test', email: 'test@test.com' });
     });
 
     it('invalid email address have been passed - must return null', async () => {
       const email = 'test@tt.com';
       const pass = 'test';
-      expect(await authService.validateUser(email, pass)).toBeNull;
+      expect(await authService.validateUser(email, pass)).toBeNull();
     });
 
     it('invalid password have been passed - must return null', async () => {
       const email = 'test@test.com';
       const pass = 'tst';
-      expect(await authService.validateUser(email, pass)).toBeNull;
+      expect(await authService.validateUser(email, pass)).toBeNull();
     });
   });
 

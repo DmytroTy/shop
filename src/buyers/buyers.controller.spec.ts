@@ -3,7 +3,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Buyer } from './buyer.entity';
 import { BuyersController } from './buyers.controller';
 import { BuyersService } from './buyers.service';
-import { MockRepository } from './testing/mock.repository';
+import { MockBuyerRepository } from './testing/mock.buyer.repository';
 
 describe('BuyersController', () => {
   let controller: BuyersController;
@@ -15,7 +15,7 @@ describe('BuyersController', () => {
         BuyersService,
         {
           provide: getRepositoryToken(Buyer),
-          useClass: MockRepository,
+          useClass: MockBuyerRepository,
         },
       ],
     }).compile();

@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Order } from './order.entity';
 import { OrdersService } from './orders.service';
-import { MockRepository } from './testing/mock.repository';
+import { MockOrderRepository } from './testing/mock.order.repository';
 
 describe('OrdersService', () => {
   let service: OrdersService;
@@ -13,7 +13,7 @@ describe('OrdersService', () => {
         OrdersService,
         {
           provide: getRepositoryToken(Order),
-          useClass: MockRepository,
+          useClass: MockOrderRepository,
         },
       ],
     }).compile();
