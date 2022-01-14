@@ -39,6 +39,8 @@ describe('AuthService', () => {
     it('a valid e-mail address and password have been passed - must return the user object', async () => {
       const email = 'test@test.com';
       const pass = 'test';
+      // jest.spyOn(buyersService, 'findOne').mockImplementation(() => Promise.resolve(buyer));
+
       expect(await authService.validateUser(email, pass)).toEqual({ id: 1, username: 'test', email: 'test@test.com' });
     });
 
