@@ -5,7 +5,7 @@ import { AppController } from './app.controller';
 import { AuthService } from './auth/auth.service';
 import { Buyer } from './buyers/buyer.entity';
 import { BuyersService } from './buyers/buyers.service';
-import { MockBuyerRepository } from './buyers/testing/mock.buyer.repository';
+import { MockBuyersRepository } from './buyers/testing/mock.buyers.repository';
 import { MockJwtService } from './testing/mock.jwt.service';
 
 describe('AppController', () => {
@@ -19,7 +19,7 @@ describe('AppController', () => {
         BuyersService,
         {
           provide: getRepositoryToken(Buyer),
-          useClass: MockBuyerRepository,
+          useClass: MockBuyersRepository,
         },
         {
           provide: JwtService,

@@ -5,7 +5,7 @@ import { MockJwtService } from '../testing/mock.jwt.service';
 import { AuthService } from './auth.service';
 import { Buyer } from '../buyers/buyer.entity';
 import { BuyersService } from '../buyers/buyers.service';
-import { MockBuyerRepository } from '../buyers/testing/mock.buyer.repository';
+import { MockBuyersRepository } from '../buyers/testing/mock.buyers.repository';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -18,7 +18,7 @@ describe('AuthService', () => {
         BuyersService,
         {
           provide: getRepositoryToken(Buyer),
-          useClass: MockBuyerRepository,
+          useClass: MockBuyersRepository,
         },
         {
           provide: JwtService,
@@ -65,9 +65,9 @@ describe('AuthService', () => {
   describe('register', () => {
     it('createBuyerDto have been passed - must return a buyer object', async () => {
       const createBuyerDto = { username: 'test', password: 'test', email: 'test@test.com' };
-      expect(await authService.register(createBuyerDto)).toHaveProperty('id');
-      expect(await authService.register(createBuyerDto)).toHaveProperty('username', 'test');
-      expect(await authService.register(createBuyerDto)).toHaveProperty('email', 'test@test.com');
+      expect(await authService.register({ ...createBuyerDto })).toHaveProperty('id');
+      expect(await authService.register({ ...createBuyerDto })).toHaveProperty('username', 'test');
+      expect(await authService.register({ ...createBuyerDto })).toHaveProperty('email', 'test@test.com');
     });
   });
 });

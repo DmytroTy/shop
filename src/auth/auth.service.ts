@@ -16,8 +16,8 @@ export class AuthService {
     const isMatch = user ? await bcrypt.compare(pass, user.password) : false;
 
     if (isMatch) {
-      const { password, ...result } = user;
-      return result;
+      delete user.password;
+      return user;
     }
     return null;
   }
@@ -35,8 +35,9 @@ export class AuthService {
     createBuyerDto.password = await bcrypt.hash(pass, saltOrRounds);
 
     const buyer = await this.buyersService.create(createBuyerDto);
-    const { password, deletedAt, ...result } = buyer;
+    delete buyer.password;
+    delete buyer.deletedAt;
 
-    return result;
+    return buyer;
   }
 }
