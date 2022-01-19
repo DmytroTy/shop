@@ -1,5 +1,5 @@
 import { BraintreeGateway, Environment } from 'braintree';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -26,25 +26,27 @@ export class PaymentService {
   private readonly gateway: BraintreeGateway; 
 
   async createClientToken(userId: number) {
-    const customerId = await this.paymentsRepository.findOne({
+    const payment = await this.paymentsRepository.findOne({
       where: { buyer: { id: userId } },
       order: { id: 'DESC' },
     });
-    const { clientToken } = await this.gateway.clientToken.generate(customerId ? { customerId } : {});
-    return { client_token: clientToken };
+    const { clientToken } = await this.gateway.clientToken.generate(payment ? { customerId: payment.customerId } : {});
+    return { clientToken };
   }
 
-  async sale(nonceFromTheClient) {
-    const { success } = await this.gateway.transaction.sale({
+  async sale({ paymentMethodNonce, clientDeviceData }) {
+    const { message, success, transaction } = await this.gateway.transaction.sale({
       amount: "10.00",
-      paymentMethodNonce: nonceFromTheClient,
-      // deviceData: deviceDataFromTheClient,
+      paymentMethodNonce,
+      deviceData: clientDeviceData,
       options: {
-        submitForSettlement: true
+        submitForSettlement: true,
       }
     });
 
-    // if (!success) throw new 
+    if (!success) throw new BadRequestException(message);
+
+    // transaction.id
 
     return { success };
   }

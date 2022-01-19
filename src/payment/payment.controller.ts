@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Request } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiOkResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { PaymentService } from './payment.service';
 
 @ApiBearerAuth()
@@ -7,13 +7,13 @@ import { PaymentService } from './payment.service';
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
-  @Get('client_token')
+  @Get('client-token')
   @ApiOkResponse({
     description: 'Get client token.',
     schema: {
       type: 'object',
       properties: {
-        client_token: {
+        clientToken: {
           type: 'string',
         },
       },
@@ -37,17 +37,21 @@ export class PaymentController {
     },
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
+  @ApiBadRequestResponse({ description: 'Bad request!' })
   @ApiBody({
     schema: {
       type: 'object',
       properties: {
-        payment_method_nonce: {
+        paymentMethodNonce: {
+          type: 'string',
+        },
+        clientDeviceData: {
           type: 'string',
         },
       },
     },
   })
   async checkout(@Body() body) { // @Request() req req.user
-    return this.paymentService.sale(body.payment_method_nonce);
+    return this.paymentService.sale(body);
   }
 }

@@ -23,7 +23,7 @@ export class AppController {
     schema: {
       type: 'object',
       properties: {
-        access_token: {
+        accessToken: {
           type: 'string',
         },
       },
