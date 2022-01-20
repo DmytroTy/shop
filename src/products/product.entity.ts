@@ -1,7 +1,8 @@
-import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, Check } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
+@Check(`"quantity" > 0`)
 export class Product {
   @ApiProperty()
   @PrimaryGeneratedColumn()
