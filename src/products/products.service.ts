@@ -20,6 +20,10 @@ export class ProductsService {
     return this.productsRepository.find({ select: ["id", "type", "color", "price", "quantity"] });
   }
 
+  async findByIds(ids): Promise<Product[]> {
+    return this.productsRepository.findByIds(ids, { select: ["id", "type", "color", "price", "quantity"] });
+  }
+
   async findOne(id: number): Promise<Product> {
     const product = await this.productsRepository.findOne(id, { select: ["id", "type", "color", "price", "quantity"] });
 
