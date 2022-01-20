@@ -1,9 +1,8 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { Order } from './order.entity';
-import { AddOrderProductDto } from './dto/add-order-product.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
+import { Product } from '../products/product.entity';
 
 @Injectable()
 export class OrdersService {
@@ -12,10 +11,10 @@ export class OrdersService {
     private ordersRepository: Repository<Order>,
   ) {}
 
-  async create(addOrderProductsDto: AddOrderProductDto[], userId: number): Promise<Order> {
+  async create(products: Product[], userId: number): Promise<Order> {
     return this.ordersRepository.save({
       buyer: { id: userId },
-      orderProducts: addOrderProductsDto,
+      orderProducts: products,
     });
   }
 
@@ -37,14 +36,14 @@ export class OrdersService {
     return order;
   }
 
-  async update(id: number, updateOrderDto: UpdateOrderDto, userId: number): Promise<UpdateResult> {
+  /* async update(id: number, updateOrderDto: UpdateOrderDto, userId: number): Promise<UpdateResult> {
     const order = await this.ordersRepository.findOne(id, { where: { buyer: { id: userId } } });
     if (order) {
       return this.ordersRepository.update(id, updateOrderDto);
     } else {
-      throw new ForbiddenException();
+      throw new Exception();
     }
-  }
+  } */
 
   async remove(id: number): Promise<UpdateResult> {
     return this.ordersRepository.softDelete(id);
