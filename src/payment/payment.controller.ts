@@ -1,7 +1,8 @@
 import { Body, Controller, Get, Post, Request } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiOkResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { PaymentService } from './payment.service';
 
+@ApiTags('payment')
 @ApiBearerAuth()
 @Controller('payment')
 export class PaymentController {
@@ -48,10 +49,24 @@ export class PaymentController {
         clientDeviceData: {
           type: 'string',
         },
+        orderProducts: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: {
+                type: 'number',
+              },
+              quantity: {
+                type: 'number',
+              },
+            },
+          },
+        },
       },
     },
   })
-  async checkout(@Body() body) { // @Request() req req.user
-    return this.paymentService.sale(body);
+  async checkout(@Body() body, @Request() req) {
+    return this.paymentService.sale(body, req.user.userId);
   }
 }

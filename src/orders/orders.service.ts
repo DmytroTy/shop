@@ -36,14 +36,9 @@ export class OrdersService {
     return order;
   }
 
-  /* async update(id: number, updateOrderDto: UpdateOrderDto, userId: number): Promise<UpdateResult> {
-    const order = await this.ordersRepository.findOne(id, { where: { buyer: { id: userId } } });
-    if (order) {
-      return this.ordersRepository.update(id, updateOrderDto);
-    } else {
-      throw new Exception();
-    }
-  } */
+  async update(id: number, updateOrder: Order): Promise<UpdateResult> {
+    return this.ordersRepository.update(id, updateOrder);
+  }
 
   async remove(id: number): Promise<UpdateResult> {
     return this.ordersRepository.softDelete(id);
