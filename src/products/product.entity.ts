@@ -2,7 +2,7 @@ import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, Check } from 
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
-@Check(`"quantity" > 0`)
+@Check(`"quantity" >= 0`)
 export class Product {
   @ApiProperty()
   @PrimaryGeneratedColumn()

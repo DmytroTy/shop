@@ -7,10 +7,13 @@ export class Payment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  customerId: string;
+  @Column({
+    nullable: true,
+    default: null
+  })
+  customerId?: string;
 
-  @Column()
+  @Column({ unique: true })
   transactionId: string;
 
   @ManyToOne(type => Buyer)
