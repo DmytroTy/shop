@@ -9,7 +9,6 @@ import { MockBuyersRepository } from '../buyers/testing/mock.buyers.repository';
 
 describe('AuthService', () => {
   let authService: AuthService;
-  let buyersService: BuyersService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -28,7 +27,6 @@ describe('AuthService', () => {
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
-    buyersService = module.get<BuyersService>(BuyersService);
   });
 
   it('authService should be defined', () => {
@@ -56,9 +54,9 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    it('user have been passed - must return a object with field "access_token"', async () => {
+    it('user have been passed - must return a object with field "accessToken"', async () => {
       const user = { id: 1, email: 'test@test.com' };
-      expect(await authService.login(user)).toHaveProperty('access_token');
+      expect(await authService.login(user)).toHaveProperty('accessToken');
     });
   });
 
