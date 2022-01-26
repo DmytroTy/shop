@@ -20,7 +20,7 @@ export class PaymentService {
   ) {
     this.gateway = new BraintreeGateway({
       environment: 
-        this.configService.get<string>('NODE_ENV') == 'development'
+        this.configService.get<string>('NODE_ENV') === 'development'
           ? Environment.Sandbox
           : Environment.Live,
       merchantId: this.configService.get<string>('BRAINTREE_MERCHANT_ID'),
@@ -31,12 +31,24 @@ export class PaymentService {
 
   private readonly gateway: BraintreeGateway; 
 
-  async createClientToken(userId: number) {
+  async createClientToken({ userId, email }) {
     const payment = await this.paymentsRepository.findOne({
       where: { buyer: { id: userId } },
       order: { id: 'DESC' },
     });
-    const { clientToken } = await this.gateway.clientToken.generate(payment ? { customerId: payment.customerId } : {});
+
+    let customerId: string;
+    if (payment) customerId = payment.customerId;
+    else {
+      ({ customer: { id: customerId } } = await this.gateway.customer.create({
+        // firstName: "Jen",
+        // lastName: "Smith",
+        email,
+      }));
+    }
+    console.log(customerId);
+
+    const { clientToken } = await this.gateway.clientToken.generate({ customerId });
     return { clientToken };
   }
 

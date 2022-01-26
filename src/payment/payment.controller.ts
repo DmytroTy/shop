@@ -22,7 +22,7 @@ export class PaymentController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
   getClientToken(@Request() req) {
-    return this.paymentService.createClientToken(req.user.userId);
+    return this.paymentService.createClientToken(req.user);
   }
 
   @Post('checkout')
