@@ -1,4 +1,4 @@
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
@@ -15,7 +15,6 @@ describe('PaymentController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [ConfigModule.forRoot()],
       controllers: [PaymentController],
       providers: [
         PaymentService,
@@ -23,7 +22,7 @@ describe('PaymentController', () => {
           provide: Connection,
           useClass: MockConnection,
         },
-        // ConfigService,
+        ConfigService,
         {
           provide: getRepositoryToken(Product),
           useClass: MockProductRepository,

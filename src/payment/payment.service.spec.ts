@@ -1,5 +1,4 @@
-import { BraintreeGateway, Environment } from 'braintree';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
@@ -13,18 +12,17 @@ import { MockBraintreeGateway } from '../testing/mock.braintree.gateway';
 
 describe('PaymentService', () => {
   let service: PaymentService;
+  const gateway = new MockBraintreeGateway;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [ConfigModule.forRoot()],
       providers: [
         PaymentService,
         {
           provide: Connection,
           useClass: MockConnection,
         },
-        // ConfigService,
-        Environment,
+        ConfigService,
         {
           provide: getRepositoryToken(Product),
           useClass: MockProductRepository,
@@ -33,13 +31,14 @@ describe('PaymentService', () => {
           provide: getRepositoryToken(Payment),
           useClass: MockPaymentsRepository,
         },
-        {
+        /* {
           provide: BraintreeGateway,
           useClass: MockBraintreeGateway,
-        },
+        }, */
       ],
     }).compile();
 
+    jest.spyOn((service as any).gateway, 'get').mockReturnValue(gateway);
     service = module.get<PaymentService>(PaymentService);
   });
 
