@@ -17,19 +17,24 @@ export class PaymentService {
     private productsRepository: Repository<Product>,
     @InjectRepository(Payment)
     private paymentsRepository: Repository<Payment>,
-  ) {
-    this.gateway = new BraintreeGateway({
-      environment: 
-        this.configService.get<string>('NODE_ENV') === 'development'
-          ? Environment.Sandbox
-          : Environment.Live,
-      merchantId: this.configService.get<string>('BRAINTREE_MERCHANT_ID'),
-      publicKey: this.configService.get<string>('BRAINTREE_PUBLIC_KEY'),
-      privateKey: this.configService.get<string>('BRAINTREE_PRIVATE_KEY'),
-    });
-  }
+  ) {}
 
-  private readonly gateway: BraintreeGateway; 
+  private braintreeGateway: BraintreeGateway;
+
+  gateway(): BraintreeGateway {
+    if (!this.braintreeGateway) {
+      this.braintreeGateway = new BraintreeGateway({
+        environment: 
+          this.configService.get<string>('NODE_ENV') === 'development'
+            ? Environment.Sandbox
+            : Environment.Live,
+        merchantId: this.configService.get<string>('BRAINTREE_MERCHANT_ID'),
+        publicKey: this.configService.get<string>('BRAINTREE_PUBLIC_KEY'),
+        privateKey: this.configService.get<string>('BRAINTREE_PRIVATE_KEY'),
+      });
+    }
+    return this.braintreeGateway;
+  }
 
   async createClientToken({ userId, email }) {
     const payment = await this.paymentsRepository.findOne({
@@ -41,14 +46,14 @@ export class PaymentService {
     if (payment) {
       customerId = payment.customerId;
     } else {
-      ({ customer: { id: customerId } } = await this.gateway.customer.create({
-        // firstName: "Jen",
-        // lastName: "Smith",
+      ({ customer: { id: customerId } } = await this.gateway().customer.create({
+        // firstName,
+        // lastName,
         email,
       }));
     }
 
-    const { clientToken } = await this.gateway.clientToken.generate({ customerId });
+    const { clientToken } = await this.gateway().clientToken.generate({ customerId });
     return { clientToken };
   }
 
@@ -88,7 +93,7 @@ export class PaymentService {
         order: { id: 'DESC' },
       });
 
-      const { message, success, transaction } = await this.gateway.transaction.sale({
+      const { message, success, transaction } = await this.gateway().transaction.sale({
         amount: totalSum.toString(),
         orderId: order.id.toString(),
         paymentMethodNonce,
@@ -129,7 +134,7 @@ export class PaymentService {
     } catch (err) {
       // since we have errors lets rollback the changes we made
       if (transactionId) {
-        await this.gateway.transaction.void(transactionId);
+        await this.gateway().transaction.void(transactionId);
       }
 
       await queryRunner.rollbackTransaction();

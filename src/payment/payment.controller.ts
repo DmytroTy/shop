@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Request } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { PaymentService } from './payment.service';
 
 @ApiTags('payment')
@@ -26,7 +26,7 @@ export class PaymentController {
   }
 
   @Post('checkout')
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'Successfully checkout.',
     schema: {
       type: 'object',
