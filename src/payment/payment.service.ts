@@ -38,15 +38,15 @@ export class PaymentService {
     });
 
     let customerId: string;
-    if (payment) customerId = payment.customerId;
-    else {
+    if (payment) {
+      customerId = payment.customerId;
+    } else {
       ({ customer: { id: customerId } } = await this.gateway.customer.create({
         // firstName: "Jen",
         // lastName: "Smith",
         email,
       }));
     }
-    console.log(customerId);
 
     const { clientToken } = await this.gateway.clientToken.generate({ customerId });
     return { clientToken };
@@ -56,14 +56,20 @@ export class PaymentService {
     const queryRunner = this.connection.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
+
     let transactionId: string;
+
     try {
       let totalSum = 0;
+
       for (const productOrder of orderProducts) {
         const productDB = await this.productsRepository.findOne(productOrder.id);
+
         if (productOrder.quantity <= productDB.quantity) {
-          queryRunner.manager.decrement(Product, { id: productOrder.id }, 'quantity', productOrder.quantity);
+          await queryRunner.manager.decrement(Product, { id: productOrder.id }, 'quantity', productOrder.quantity);
+
           totalSum += productOrder.quantity * productDB.price;
+
           productOrder.type = productDB.type;
           productOrder.color = productDB.color;
           productOrder.price = productDB.price;
@@ -95,11 +101,11 @@ export class PaymentService {
       });
 
       if (!success) {
-        orderProducts.forEach(productOrder => {
-          queryRunner.manager.increment(Product, { id: productOrder.id }, 'quantity', productOrder.quantity);
-        });
+        for (const productOrder of orderProducts) {
+          await queryRunner.manager.increment(Product, { id: productOrder.id }, 'quantity', productOrder.quantity);
+        }
         order.status = Status.CANCELED;
-        queryRunner.manager.update(Order, order.id, order);
+        await queryRunner.manager.update(Order, order.id, order);
 
         throw new BadRequestException(message);
       }
@@ -111,7 +117,7 @@ export class PaymentService {
 
       await queryRunner.manager.save(Payment, {
         customerId: transaction.customer.id,
-        transactionId: transaction.id,
+        transactionId,
         buyer: { id: userId },
         order: order,
       });
@@ -122,16 +128,18 @@ export class PaymentService {
 
     } catch (err) {
       // since we have errors lets rollback the changes we made
-      await this.gateway.transaction.void(transactionId);
+      if (transactionId) {
+        await this.gateway.transaction.void(transactionId);
+      }
 
       await queryRunner.rollbackTransaction();
 
       if (err instanceof BadRequestException) {
         throw err;
-      } else {
-        console.log(err.message);
-        throw new InternalServerErrorException('Something went wrong, please try again later!');
       }
+
+      console.log(err.message);
+      throw new InternalServerErrorException('Something went wrong, please try again later!');
     } finally {
       await queryRunner.release();
     }
