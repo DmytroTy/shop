@@ -3,6 +3,7 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
+import { createLogger, format, transports } from 'winston';
 import { Payment } from './payment.entity';
 import { Status } from '../enums/status.enum';
 import { Order } from '../orders/order.entity';
@@ -17,7 +18,36 @@ export class PaymentService {
     private productsRepository: Repository<Product>,
     @InjectRepository(Payment)
     private paymentsRepository: Repository<Payment>,
-  ) {}
+  ) {
+    this.logger = createLogger({
+      level: 'info',
+      format: format.combine(
+        format.timestamp({
+          format: 'YYYY-MM-DD HH:mm:ss'
+        }),
+        format.errors({ stack: true }),
+        format.splat(),
+        format.json(),
+      ),
+      defaultMeta: { service: 'PaymentService' },
+      transports: [
+        new transports.File({ filename: 'error.log', level: 'error' }),
+        new transports.Console({ level: 'error' }),
+        new transports.File({ filename: 'combined.log' }),
+      ]
+    });
+
+    if (this.configService.get<string>('NODE_ENV') !== 'production') {
+      this.logger.add(new transports.Console({
+        format: format.combine(
+          format.colorize(),
+          format.simple(),
+        ),
+      }));
+    }
+  }
+
+  private logger;
 
   private braintreeGateway: BraintreeGateway;
 
@@ -143,7 +173,7 @@ export class PaymentService {
         throw err;
       }
 
-      console.log(err.message);
+      this.logger.error('Important error: ', err);
       throw new InternalServerErrorException('Something went wrong, please try again later!');
     } finally {
       await queryRunner.release();

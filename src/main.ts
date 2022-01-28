@@ -1,9 +1,28 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { createLogger, format, transports } from 'winston';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+
+  app.useLogger(createLogger({
+    level: 'info',
+    format: format.combine(
+      format.timestamp({
+        format: 'YYYY-MM-DD HH:mm:ss'
+      }),
+      format.errors({ stack: true }),
+      format.splat(),
+      format.json(),
+    ),
+    defaultMeta: { service: 'App' },
+    transports: [
+      new transports.File({ filename: 'error.log', level: 'error' }),
+      new transports.Console({ level: 'error', format: format.combine(format.colorize(), format.simple()) }),
+      new transports.File({ filename: 'combined.log' }),
+    ]
+  }));
 
   app.enableCors();
 
