@@ -3,9 +3,9 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
-import { createLogger, format, transports } from 'winston';
 import { Payment } from './payment.entity';
 import { Status } from '../enums/status.enum';
+import { MyLogger } from '../logger/my-logger.service';
 import { Order } from '../orders/order.entity';
 import { Product } from '../products/product.entity';
 
@@ -14,40 +14,12 @@ export class PaymentService {
   constructor(
     private connection: Connection,
     private readonly configService: ConfigService,
+    private readonly logger: MyLogger,
     @InjectRepository(Product)
     private productsRepository: Repository<Product>,
     @InjectRepository(Payment)
     private paymentsRepository: Repository<Payment>,
-  ) {
-    this.logger = createLogger({
-      level: 'info',
-      format: format.combine(
-        format.timestamp({
-          format: 'YYYY-MM-DD HH:mm:ss'
-        }),
-        format.errors({ stack: true }),
-        format.splat(),
-        format.json(),
-      ),
-      defaultMeta: { service: 'PaymentService' },
-      transports: [
-        new transports.File({ filename: 'error.log', level: 'error' }),
-        new transports.Console({ level: 'error' }),
-        new transports.File({ filename: 'combined.log' }),
-      ]
-    });
-
-    if (this.configService.get<string>('NODE_ENV') !== 'production') {
-      this.logger.add(new transports.Console({
-        format: format.combine(
-          format.colorize(),
-          format.simple(),
-        ),
-      }));
-    }
-  }
-
-  private logger;
+  ) {}
 
   private braintreeGateway: BraintreeGateway;
 

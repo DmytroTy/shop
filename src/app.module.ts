@@ -10,6 +10,7 @@ import { OrdersModule } from './orders/orders.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { PaymentModule } from './payment/payment.module';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PaymentModule } from './payment/payment.module';
     OrdersModule,
     AuthModule,
     PaymentModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [

@@ -2,6 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
+import { MyLogger } from '../logger/my-logger.service';
 import { PaymentController } from './payment.controller';
 import { Payment } from './payment.entity';
 import { PaymentService } from './payment.service';
@@ -22,6 +23,7 @@ describe('PaymentController', () => {
           provide: Connection,
           useClass: MockConnection,
         },
+        MyLogger,
         ConfigService,
         {
           provide: getRepositoryToken(Product),
