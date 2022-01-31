@@ -29,7 +29,6 @@ export class AppController {
       },
     },
   })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -51,7 +50,7 @@ export class AppController {
   @Post('auth/register')
   @HttpCode(HttpStatus.CREATED)
   @ApiCreatedResponse({
-    description: 'The record new buyer has been successfully created.',
+    description: 'The record of new buyer has been successfully created.',
     type: Buyer,
   })
   // @ApiConflictResponse({ description: 'A user with this email already exists!' })
