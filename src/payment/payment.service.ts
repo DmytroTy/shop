@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
 import { Payment } from './payment.entity';
 import { Status } from '../enums/status.enum';
-import { MyLogger } from '../logger/my-logger.service';
+import { LoggerWinston } from '../logger/logger-winston.service';
 import { Order } from '../orders/order.entity';
 import { Product } from '../products/product.entity';
 
@@ -14,7 +14,7 @@ export class PaymentService {
   constructor(
     private connection: Connection,
     private readonly configService: ConfigService,
-    private readonly logger: MyLogger,
+    private readonly logger: LoggerWinston,
     @InjectRepository(Product)
     private productsRepository: Repository<Product>,
     @InjectRepository(Payment)

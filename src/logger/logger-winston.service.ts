@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { createLogger, format, transports } from 'winston';
 
 @Injectable()
-export class MyLogger implements LoggerService {
+export class LoggerWinston implements LoggerService {
   constructor(private readonly configService: ConfigService) {
     this.logger = createLogger({
       level: 'info',
