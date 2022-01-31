@@ -1,5 +1,6 @@
-import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, Check } from 'typeorm';
+import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, Check, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { Review } from '../reviews/review.entity';
 
 @Entity()
 @Check(`"quantity" >= 0`)
@@ -26,4 +27,7 @@ export class Product {
 
   @DeleteDateColumn()
   deletedAt?: Date;
+
+  @OneToMany(type => Review, review => review.product)
+  reviews?: Review[];
 }
