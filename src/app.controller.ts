@@ -1,5 +1,5 @@
 import { Controller, Body, Get, Request, Post, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiConflictResponse, ApiCreatedResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConflictResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/guards/local-auth.guard';
 import { SkipAuth } from './decorators/skip-auth.decorator';
@@ -54,7 +54,8 @@ export class AppController {
     description: 'The record new buyer has been successfully created.',
     type: Buyer,
   })
-  // @ApiConflictResponse({ description: 'A user with this email already exists!' })
+  @ApiConflictResponse({ description: 'A user with this email already exists!' })
+  @ApiInternalServerErrorResponse({ description: 'Something went wrong.' })
   async register(@Body() createBuyerDto: CreateBuyerDto) {
     return this.authService.register(createBuyerDto);
   }

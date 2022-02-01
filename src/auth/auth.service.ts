@@ -1,13 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { Buyer } from '../buyers/buyer.entity';
 import { BuyersService } from '../buyers/buyers.service';
 import { CreateBuyerDto } from '../buyers/dto/create-buyer.dto';
+import { LoggerWinston } from '../logger/logger-winston.service';
+
+const POSTGRES_ERROR_CODE_DUPLICATE_KEY_VALUE = '23505';
 
 @Injectable()
 export class AuthService {
   constructor(
     private buyersService: BuyersService,
+    private readonly logger: LoggerWinston,
     private jwtService: JwtService
   ) {}
 
@@ -34,9 +39,19 @@ export class AuthService {
     const pass = createBuyerDto.password;
     createBuyerDto.password = await bcrypt.hash(pass, saltOrRounds);
 
-    const buyer = await this.buyersService.create(createBuyerDto);
-    delete buyer.password;
-    delete buyer.deletedAt;
+    let buyer: Buyer;
+    try {
+      buyer = await this.buyersService.create(createBuyerDto);
+      delete buyer.password;
+      delete buyer.deletedAt;
+    } catch (err) {
+      if (err.code === POSTGRES_ERROR_CODE_DUPLICATE_KEY_VALUE) {
+        this.logger.warn(err);
+        throw new ConflictException('A user with this email already exists!');
+      }
+      this.logger.error('Important error: ', err);
+      throw new InternalServerErrorException('Something went wrong, please try again later.');
+    }
 
     return buyer;
   }
