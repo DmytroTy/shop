@@ -1,5 +1,7 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { LoggerWinston } from '../logger/logger-winston.service';
 import { Order } from './order.entity';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
@@ -12,6 +14,8 @@ describe('OrdersController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [OrdersController],
       providers: [
+        ConfigService,
+        LoggerWinston,
         OrdersService,
         {
           provide: getRepositoryToken(Order),
