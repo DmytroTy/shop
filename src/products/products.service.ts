@@ -4,10 +4,12 @@ import { Repository, UpdateResult } from 'typeorm';
 import { Product } from './product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { LoggerWinston } from '../logger/logger-winston.service';
 
 @Injectable()
 export class ProductsService {
   constructor(
+    private readonly logger: LoggerWinston,
     @InjectRepository(Product)
     private productsRepository: Repository<Product>,
   ) {}
@@ -23,7 +25,10 @@ export class ProductsService {
   async findOne(id: number): Promise<Product> {
     const product = await this.productsRepository.findOne(id, { select: ["id", "type", "color", "price", "quantity"] });
 
-    if (!product) throw new NotFoundException();
+    if (!product) {
+      this.logger.warn(`Product with id = ${id} not found.`);
+      throw new NotFoundException();
+    }
 
     return product;
   }

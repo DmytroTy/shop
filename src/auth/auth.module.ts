@@ -4,12 +4,14 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { BuyersModule } from '../buyers/buyers.module';
+import { LoggerModule } from '../logger/logger.module';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
     BuyersModule,
+    LoggerModule,
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

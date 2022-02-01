@@ -142,6 +142,7 @@ export class PaymentService {
       await queryRunner.rollbackTransaction();
 
       if (err instanceof BadRequestException) {
+        this.logger.warn(err);
         throw err;
       }
 

@@ -1,12 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
+import { LoggerWinston } from '../logger/logger-winston.service';
 import { Order } from './order.entity';
 import { Product } from '../products/product.entity';
 
 @Injectable()
 export class OrdersService {
   constructor(
+    private readonly logger: LoggerWinston,
     @InjectRepository(Order)
     private ordersRepository: Repository<Order>,
   ) {}
@@ -31,7 +33,10 @@ export class OrdersService {
       where: { buyer: { id: userId } },
     });
 
-    if (!order) throw new NotFoundException();
+    if (!order) {
+      this.logger.warn(`Order with id = ${id} not found.`);
+      throw new NotFoundException();
+    }
 
     return order;
   }
