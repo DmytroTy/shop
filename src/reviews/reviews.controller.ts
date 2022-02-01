@@ -7,12 +7,12 @@ import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 
 @ApiTags('reviews')
-@ApiBearerAuth()
 @Controller('reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
   @Post()
+  @ApiBearerAuth()
   @ApiCreatedResponse({
     description: 'The record of new review has been successfully created.',
     type: Review,
@@ -44,6 +44,7 @@ export class ReviewsController {
   }
 
   @Patch(':id')
+  @ApiBearerAuth()
   @ApiOkResponse({
     description: 'The record of review has been successfully updated.',
     type: Review,
