@@ -44,19 +44,24 @@ export class PaymentService {
       order: { id: 'DESC' },
     });
 
-    let customerId: string;
-    if (payment) {
-      customerId = payment.customerId;
-    } else {
-      ({ customer: { id: customerId } } = await this.gateway().customer.create({
-        // firstName,
-        // lastName,
-        email,
-      }));
-    }
+    try {
+      let customerId: string;
+      if (payment) {
+        customerId = payment.customerId;
+      } else {
+        ({ customer: { id: customerId } } = await this.gateway().customer.create({
+          // firstName,
+          // lastName,
+          email,
+        }));
+      }
 
-    const { clientToken } = await this.gateway().clientToken.generate({ customerId });
-    return { clientToken };
+      const { clientToken } = await this.gateway().clientToken.generate({ customerId });
+      return { clientToken };
+    } catch (err) {
+      this.logger.error('Important error: ', err);
+      throw new InternalServerErrorException('Something went wrong, please try again later.');
+    }
   }
 
   async sale({ paymentMethodNonce, clientDeviceData, orderProducts }, userId: number) {

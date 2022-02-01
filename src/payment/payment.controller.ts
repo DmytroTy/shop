@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Request } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { PaymentService } from './payment.service';
 
 @ApiTags('payment')
@@ -21,6 +21,7 @@ export class PaymentController {
     },
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
+  @ApiInternalServerErrorResponse({ description: 'Something went wrong.' })
   getClientToken(@Request() req) {
     return this.paymentService.createClientToken(req.user);
   }
@@ -39,6 +40,7 @@ export class PaymentController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
   @ApiBadRequestResponse({ description: 'Bad request!' })
+  @ApiInternalServerErrorResponse({ description: 'Something went wrong.' })
   @ApiBody({
     schema: {
       type: 'object',
