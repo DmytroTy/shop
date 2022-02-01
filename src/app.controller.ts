@@ -55,7 +55,7 @@ export class AppController {
     type: Buyer,
   })
   @ApiConflictResponse({ description: 'A user with this email already exists!' })
-  @ApiInternalServerErrorResponse({ description: 'Something went wrong.' })
+  @ApiInternalServerErrorResponse({ description: 'Failed to create user account.' })
   async register(@Body() createBuyerDto: CreateBuyerDto) {
     return this.authService.register(createBuyerDto);
   }

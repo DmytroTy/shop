@@ -34,7 +34,7 @@ export class OrdersService {
     });
 
     if (!order) {
-      this.logger.warn('User error: ', `Order with id = ${id} not found.`);
+      this.logger.warn(`User error: Order with id = ${id} not found.`, 'OrdersService');
       throw new NotFoundException();
     }
 

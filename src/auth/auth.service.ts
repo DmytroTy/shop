@@ -46,11 +46,11 @@ export class AuthService {
       delete buyer.deletedAt;
     } catch (err) {
       if (err.code === POSTGRES_ERROR_CODE_DUPLICATE_KEY_VALUE) {
-        this.logger.warn(err);
+        this.logger.warn(`User error: ${err.message}`, 'AuthService');
         throw new ConflictException('A user with this email already exists!');
       }
-      this.logger.error('Important error: ', err);
-      throw new InternalServerErrorException('Something went wrong, please try again later.');
+      this.logger.error(`Important error: ${err.message}`, 'AuthService', err);
+      throw new InternalServerErrorException('Failed to create user account, please try again later.');
     }
 
     return buyer;

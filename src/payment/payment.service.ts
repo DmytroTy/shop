@@ -59,8 +59,8 @@ export class PaymentService {
       const { clientToken } = await this.gateway().clientToken.generate({ customerId });
       return { clientToken };
     } catch (err) {
-      this.logger.error('Important error: ', err);
-      throw new InternalServerErrorException('Something went wrong, please try again later.');
+      this.logger.error(`Important error: ${err.message}`, 'PaymentService', err);
+      throw new InternalServerErrorException('Something went wrong with Braintree service, please try again later.');
     }
   }
 
@@ -147,12 +147,12 @@ export class PaymentService {
       await queryRunner.rollbackTransaction();
 
       if (err instanceof BadRequestException) {
-        this.logger.warn('User error: ', err);
+        this.logger.warn(`User error: ${err.message}`, 'PaymentService');
         throw err;
       }
 
-      this.logger.error('Important error: ', err);
-      throw new InternalServerErrorException('Something went wrong, please try again later!');
+      this.logger.error(`Important error: ${err.message}`, 'PaymentService', err);
+      throw new InternalServerErrorException('Something went wrong with Braintree service, please try again later!');
     } finally {
       await queryRunner.release();
     }

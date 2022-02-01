@@ -26,7 +26,7 @@ export class ProductsService {
     const product = await this.productsRepository.findOne(id, { select: ["id", "type", "color", "price", "quantity"] });
 
     if (!product) {
-      this.logger.warn('User error: ', `Product with id = ${id} not found.`);
+      this.logger.warn(`User error: Product with id = ${id} not found.`, 'ProductsService');
       throw new NotFoundException();
     }
 

@@ -9,7 +9,7 @@ export class LoggerWinston implements LoggerService {
       level: 'info',
       format: format.combine(
         format.timestamp({
-          format: 'YYYY-MM-DD HH:mm:ss'
+          format: 'YYYY-MM-DD HH:mm:ss.SSS Z'
         }),
         format.errors({ stack: true }),
         format.splat(),
@@ -27,7 +27,7 @@ export class LoggerWinston implements LoggerService {
       this.logger.add(new transports.Console({
         format: format.combine(
           format.colorize(),
-          format.simple(),
+          format.printf(info => `${info.timestamp} ${info.level}: [${info[0]}] ${info.message}`),
         ),
       }));
     }
