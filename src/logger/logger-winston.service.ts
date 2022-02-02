@@ -18,7 +18,6 @@ export class LoggerWinston implements LoggerService {
       defaultMeta: { service: 'App' },
       transports: [
         new transports.File({ filename: 'error.log', level: 'error' }),
-        new transports.Console({ level: 'error' }),
         new transports.File({ filename: 'combined.log' }),
       ]
     });

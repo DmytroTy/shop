@@ -60,7 +60,7 @@ export class PaymentService {
       return { clientToken };
     } catch (err) {
       this.logger.error(`Important error: ${err.message}`, 'PaymentService', err);
-      throw new InternalServerErrorException('Something went wrong with Braintree service, please try again later.');
+      throw new InternalServerErrorException('Something went wrong with Braintree service creating customer or token, please try again later.');
     }
   }
 
@@ -152,7 +152,7 @@ export class PaymentService {
       }
 
       this.logger.error(`Important error: ${err.message}`, 'PaymentService', err);
-      throw new InternalServerErrorException('Something went wrong with Braintree service, please try again later!');
+      throw new InternalServerErrorException('Something went wrong with Braintree service method "sale", please try again later!');
     } finally {
       await queryRunner.release();
     }

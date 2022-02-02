@@ -21,7 +21,7 @@ export class PaymentController {
     },
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
-  @ApiInternalServerErrorResponse({ description: 'Something went wrong with Braintree service.' })
+  @ApiInternalServerErrorResponse({ description: 'Something went wrong with Braintree service creating customer or token.' })
   getClientToken(@Request() req) {
     return this.paymentService.createClientToken(req.user);
   }
@@ -40,7 +40,7 @@ export class PaymentController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
   @ApiBadRequestResponse({ description: 'Bad request!' })
-  @ApiInternalServerErrorResponse({ description: 'Something went wrong with Braintree service.' })
+  @ApiInternalServerErrorResponse({ description: 'Something went wrong with Braintree service method "sale".' })
   @ApiBody({
     schema: {
       type: 'object',
