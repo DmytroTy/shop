@@ -59,7 +59,7 @@ export class PaymentService {
       const { clientToken } = await this.gateway().clientToken.generate({ customerId });
       return { clientToken };
     } catch (err) {
-      this.logger.error(`Important error: ${err.message}`, 'PaymentService', err);
+      this.logger.error(`Important error: ${err.message}`, 'PaymentService.createClientToken', err);
       throw new InternalServerErrorException('Something went wrong with Braintree service creating customer or token, please try again later.');
     }
   }
@@ -151,7 +151,7 @@ export class PaymentService {
         throw err;
       }
 
-      this.logger.error(`Important error: ${err.message}`, 'PaymentService', err);
+      this.logger.error(`Important error: ${err.message}`, 'PaymentService.sale', err);
       throw new InternalServerErrorException('Something went wrong with Braintree service method "sale", please try again later!');
     } finally {
       await queryRunner.release();
