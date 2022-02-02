@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Request } from '@nestjs/common';
-import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Order } from './order.entity';
 import { OrdersService } from './orders.service';
 
@@ -14,6 +14,7 @@ export class OrdersController {
     description: 'Get all orders.',
     type: [Order],
   })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
   findAll(@Request() req): Promise<Order[]> {
     return this.ordersService.findAll(req.user.userId);
   }
@@ -23,6 +24,7 @@ export class OrdersController {
     description: 'Get order by id.',
     type: Order,
   })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
   @ApiNotFoundResponse({ description: 'No record of order with this ID found!' })
   findOne(@Param('id') id: string, @Request() req): Promise<Order> {
     return this.ordersService.findOne(+id, req.user.userId);
