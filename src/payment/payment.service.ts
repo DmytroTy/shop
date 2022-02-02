@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
 import { Payment } from './payment.entity';
 import { Status } from '../enums/status.enum';
-import { MyLogger } from '../logger/my-logger.service';
+import { LoggerWinston } from '../logger/logger-winston.service';
 import { Order } from '../orders/order.entity';
 import { Product } from '../products/product.entity';
 
@@ -14,7 +14,7 @@ export class PaymentService {
   constructor(
     private connection: Connection,
     private readonly configService: ConfigService,
-    private readonly logger: MyLogger,
+    private readonly logger: LoggerWinston,
     @InjectRepository(Product)
     private productsRepository: Repository<Product>,
     @InjectRepository(Payment)
@@ -44,19 +44,24 @@ export class PaymentService {
       order: { id: 'DESC' },
     });
 
-    let customerId: string;
-    if (payment) {
-      customerId = payment.customerId;
-    } else {
-      ({ customer: { id: customerId } } = await this.gateway().customer.create({
-        // firstName,
-        // lastName,
-        email,
-      }));
-    }
+    try {
+      let customerId: string;
+      if (payment) {
+        customerId = payment.customerId;
+      } else {
+        ({ customer: { id: customerId } } = await this.gateway().customer.create({
+          // firstName,
+          // lastName,
+          email,
+        }));
+      }
 
-    const { clientToken } = await this.gateway().clientToken.generate({ customerId });
-    return { clientToken };
+      const { clientToken } = await this.gateway().clientToken.generate({ customerId });
+      return { clientToken };
+    } catch (err) {
+      this.logger.error(`Important error: ${err.message}`, 'PaymentService', err);
+      throw new InternalServerErrorException('Something went wrong with Braintree service creating customer or token, please try again later.');
+    }
   }
 
   async sale({ paymentMethodNonce, clientDeviceData, orderProducts }, userId: number) {
@@ -142,11 +147,12 @@ export class PaymentService {
       await queryRunner.rollbackTransaction();
 
       if (err instanceof BadRequestException) {
+        this.logger.warn(`User error: ${err.message}`, 'PaymentService');
         throw err;
       }
 
-      this.logger.error('Important error: ', err);
-      throw new InternalServerErrorException('Something went wrong, please try again later!');
+      this.logger.error(`Important error: ${err.message}`, 'PaymentService', err);
+      throw new InternalServerErrorException('Something went wrong with Braintree service method "sale", please try again later!');
     } finally {
       await queryRunner.release();
     }

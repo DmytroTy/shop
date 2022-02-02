@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -6,6 +7,7 @@ import { AuthService } from './auth/auth.service';
 import { Buyer } from './buyers/buyer.entity';
 import { BuyersService } from './buyers/buyers.service';
 import { MockBuyersRepository } from './buyers/testing/mock.buyers.repository';
+import { LoggerWinston } from './logger/logger-winston.service';
 import { MockJwtService } from './testing/mock.jwt.service';
 
 describe('AppController', () => {
@@ -15,6 +17,8 @@ describe('AppController', () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
       providers: [
+        ConfigService,
+        LoggerWinston,
         AuthService,
         BuyersService,
         {
