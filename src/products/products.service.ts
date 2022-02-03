@@ -25,11 +25,10 @@ export class ProductsService {
       searchableColumns: ['type', 'color', 'price'],
       defaultSortBy: [['id', 'DESC']],
     });
-      // { select: ["id", "type", "color", "price", "quantity"] }
   }
 
   async findOne(id: number): Promise<Product> {
-    const product = await this.productsRepository.findOne(id, { select: ["id", "type", "color", "price", "quantity"] });
+    const product = await this.productsRepository.findOne(id);
 
     if (!product) {
       this.logger.warn(`User error: Product with id = ${id} not found.`, 'ProductsService');

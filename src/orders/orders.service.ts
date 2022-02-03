@@ -28,14 +28,10 @@ export class OrdersService {
       defaultSortBy: [['id', 'DESC']],
       where: { buyer: { id: userId } },
     });
-      // select: ["id", "status", "orderProducts"]
   }
 
   async findOne(id: number, userId: number): Promise<Order> {
-    const order = await this.ordersRepository.findOne(id, {
-      select: ["id", "status", "orderProducts"],
-      where: { buyer: { id: userId } },
-    });
+    const order = await this.ordersRepository.findOne(id, { where: { buyer: { id: userId } } });
 
     if (!order) {
       this.logger.warn(`User error: Order with id = ${id} not found.`, 'OrdersService');

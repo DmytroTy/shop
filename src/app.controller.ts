@@ -1,4 +1,4 @@
-import { Controller, Body, Get, Request, Post, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Body, Get, Request, Post, HttpCode, HttpStatus, UseGuards, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiConflictResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/guards/local-auth.guard';
@@ -60,15 +60,14 @@ export class AppController {
   }
 
   @ApiBearerAuth()
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get('profile')
   @ApiOkResponse({
     description: 'Get profile.',
     type: Buyer,
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
-  async getProfile(@Request() req) {
-    const user = await this.buyersService.findOne(req.user.email);
-    delete user.password;
-    return user;
+  async getProfile(@Request() req): Promise<Buyer> {
+    return this.buyersService.findOne(req.user.email);
   }
 }

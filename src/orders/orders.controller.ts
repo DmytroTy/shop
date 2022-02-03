@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Request } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, Get, Param, Request, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
 import { Order } from './order.entity';
@@ -6,6 +6,7 @@ import { OrdersService } from './orders.service';
 
 @ApiTags('orders')
 @ApiBearerAuth()
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}

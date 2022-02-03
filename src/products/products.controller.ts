@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, Get, Param, UseInterceptors } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
 import { Product } from './product.entity';
@@ -6,6 +6,7 @@ import { ProductsService } from './products.service';
 import { SkipAuth } from '../decorators/skip-auth.decorator';
 
 @ApiTags('products')
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}

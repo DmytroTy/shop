@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Order } from '../orders/order.entity';
@@ -17,12 +18,14 @@ export class Buyer {
   username: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Column({
     nullable: true,
     default: null
   })
+  @Exclude()
   refreshToken?: string;
 
   @Column({
@@ -30,9 +33,11 @@ export class Buyer {
     nullable: true,
     default: null
   })
+  @Exclude()
   expiresIn?: Date;
 
   @DeleteDateColumn()
+  @Exclude()
   deletedAt?: Date;
 
   @OneToMany(type => Order, order => order.buyer)

@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Buyer } from '../buyers/buyer.entity';
@@ -19,6 +20,7 @@ export class Order {
   status: Status;
 
   @DeleteDateColumn()
+  @Exclude()
   deletedAt?: Date;
 
   @ManyToOne(type => Buyer, buyer => buyer.orders)
