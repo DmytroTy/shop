@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Request, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
 import { SkipAuth } from '../decorators/skip-auth.decorator';
 import { Review } from './review.entity';
 import { ReviewsService } from './reviews.service';
@@ -26,10 +27,13 @@ export class ReviewsController {
   @Get()
   @ApiOkResponse({
     description: 'Get reviews by productId.',
-    type: [Review],
+    type: Paginated,
   })
-  findByProductId(@Query('productId') productId: string) {
-    return this.reviewsService.findByProductId(+productId);
+  findByProductId(
+    @Query('productId') productId: string,
+    @Paginate() query: PaginateQuery,
+  ): Promise<Paginated<Review>> {
+    return this.reviewsService.findByProductId(+productId, query);
   }
 
   @SkipAuth()

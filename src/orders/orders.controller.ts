@@ -1,5 +1,6 @@
 import { Controller, Get, Param, Request } from '@nestjs/common';
 import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
 import { Order } from './order.entity';
 import { OrdersService } from './orders.service';
 
@@ -12,11 +13,11 @@ export class OrdersController {
   @Get()
   @ApiOkResponse({
     description: 'Get all orders.',
-    type: [Order],
+    type: Paginated,
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
-  findAll(@Request() req): Promise<Order[]> {
-    return this.ordersService.findAll(req.user.userId);
+  findAll(@Request() req, @Paginate() query: PaginateQuery): Promise<Paginated<Order>> {
+    return this.ordersService.findAll(req.user.userId, query);
   }
 
   @Get(':id')

@@ -1,5 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
 import { Repository, UpdateResult } from 'typeorm';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
@@ -19,8 +20,11 @@ export class ReviewsService {
     });
   }
 
-  async findByProductId(productId: number): Promise<Review[]> {
-    return this.reviewsRepository.find({
+  async findByProductId(productId: number, query: PaginateQuery): Promise<Paginated<Review>> {
+    return paginate(query, this.reviewsRepository, {
+      sortableColumns: ['id', 'rating'],
+      searchableColumns: ['rating', 'buyer', 'comment'],
+      defaultSortBy: [['id', 'DESC']],
       where: { product: { id: productId } },
     });
   }

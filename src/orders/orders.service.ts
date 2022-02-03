@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
 import { Repository, UpdateResult } from 'typeorm';
 import { LoggerWinston } from '../logger/logger-winston.service';
 import { Order } from './order.entity';
@@ -20,11 +21,14 @@ export class OrdersService {
     });
   }
 
-  async findAll(userId: number): Promise<Order[]> {
-    return this.ordersRepository.find({
-      select: ["id", "status", "orderProducts"],
+  async findAll(userId: number, query: PaginateQuery): Promise<Paginated<Order>> {
+    return paginate(query, this.ordersRepository, {
+      sortableColumns: ['id', 'status'],
+      searchableColumns: ['status', 'orderProducts'],
+      defaultSortBy: [['id', 'DESC']],
       where: { buyer: { id: userId } },
     });
+      // select: ["id", "status", "orderProducts"]
   }
 
   async findOne(id: number, userId: number): Promise<Order> {

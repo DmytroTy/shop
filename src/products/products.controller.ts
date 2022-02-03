@@ -1,5 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
 import { Product } from './product.entity';
 import { ProductsService } from './products.service';
 import { SkipAuth } from '../decorators/skip-auth.decorator';
@@ -13,10 +14,10 @@ export class ProductsController {
   @Get()
   @ApiOkResponse({
     description: 'Get all products.',
-    type: [Product],
+    type: Paginated,
   })
-  findAll(): Promise<Product[]> {
-    return this.productsService.findAll();
+  findAll(@Paginate() query: PaginateQuery): Promise<Paginated<Product>> {
+    return this.productsService.findAll(query);
   }
 
   @SkipAuth()
