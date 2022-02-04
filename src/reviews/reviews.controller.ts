@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Request, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Request, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
+import { ReviewAccessGuard } from './api/middleware/review-access.guard';
 import { SkipAuth } from '../decorators/skip-auth.decorator';
 import { Review } from './review.entity';
 import { ReviewsService } from './reviews.service';
@@ -47,6 +48,7 @@ export class ReviewsController {
     return this.reviewsService.findOne(+id);
   }
 
+  @UseGuards(ReviewAccessGuard)
   @Patch(':id')
   @ApiBearerAuth()
   @ApiOkResponse({
@@ -55,7 +57,7 @@ export class ReviewsController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
   @ApiForbiddenResponse({ description: 'Forbidden!'})
-  update(@Param('id') id: string, @Body() updateReviewDto: UpdateReviewDto, @Request() req) {
-    return this.reviewsService.update(+id, updateReviewDto, req.user.userId);
+  update(@Param('id') id: string, @Body() updateReviewDto: UpdateReviewDto) {
+    return this.reviewsService.update(+id, updateReviewDto);
   }
 }

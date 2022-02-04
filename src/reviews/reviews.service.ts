@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
 import { Repository, UpdateResult } from 'typeorm';
@@ -37,12 +37,8 @@ export class ReviewsService {
     return review;
   }
 
-  async update(id: number, updateReviewDto: UpdateReviewDto, userId: number): Promise<UpdateResult> {
-    const review = await this.reviewsRepository.findOne(id, { where: { buyer: { id: userId } } });
-    if (review) {
-      return this.reviewsRepository.update(id, updateReviewDto);
-    }
-    throw new ForbiddenException();
+  async update(id: number, updateReviewDto: UpdateReviewDto): Promise<UpdateResult> {
+    return this.reviewsRepository.update(id, updateReviewDto);
   }
 
   async remove(id: number): Promise<UpdateResult> {
