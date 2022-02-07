@@ -8,15 +8,11 @@ export class AddReviewsInterceptor implements NestInterceptor {
   constructor(private readonly reviewsService: ReviewsService) {}
 
   async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
-    const { params: { id }, protocol, headers: { host } } = context.switchToHttp().getRequest();
+    const { params: { id } } = context.switchToHttp().getRequest();
     const reviews = await this.reviewsService.findByProductId(+id, {
-      page: undefined,
-      limit: undefined,
-      sortBy: undefined,
-      search: undefined,
-      searchBy: undefined,
-      filter: undefined,
-      path: protocol + '://' + host + '/reviews',
+      page: 1,
+      limit: 10,
+      route: '/reviews?productId=' + id,
     });
 
     return next
