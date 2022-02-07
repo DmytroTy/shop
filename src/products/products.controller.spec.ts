@@ -6,6 +6,9 @@ import { Product } from './product.entity';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
 import { MockProductRepository } from './testing/mock.product.repository';
+import { Review } from '../reviews/review.entity';
+import { ReviewsService } from '../reviews/reviews.service';
+import { MockReviewsRepository } from '../reviews/testing/mock.reviews.repository';
 
 describe('ProductsController', () => {
   let controller: ProductsController;
@@ -17,9 +20,14 @@ describe('ProductsController', () => {
         ConfigService,
         LoggerWinston,
         ProductsService,
+        ReviewsService,
         {
           provide: getRepositoryToken(Product),
           useClass: MockProductRepository,
+        },
+        {
+          provide: getRepositoryToken(Review),
+          useClass: MockReviewsRepository,
         },
       ],
     }).compile();
