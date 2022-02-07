@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
+import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { Repository, UpdateResult } from 'typeorm';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
@@ -20,13 +20,13 @@ export class ReviewsService {
     });
   }
 
-  async findByProductId(productId: number, query: PaginateQuery): Promise<Paginated<Review>> {
-    return paginate(query, this.reviewsRepository, {
-      sortableColumns: ['id', 'rating'],
-      searchableColumns: ['rating', 'buyer', 'comment'],
-      defaultSortBy: [['id', 'DESC']],
-      where: { product: { id: productId } },
-    });
+  async findByProductId(productId: number, options: IPaginationOptions): Promise<Pagination<Review>> {
+    const queryBuilder = this.reviewsRepository
+      .createQueryBuilder('review')
+      .where("review.productId = :productId", { productId })
+      .orderBy('review.id', 'DESC');
+
+    return paginate<Review>(queryBuilder, options);
   }
 
   async findOne(id: number): Promise<Review> {

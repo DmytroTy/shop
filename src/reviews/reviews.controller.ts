@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Request, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Request, Query, DefaultValuePipe, ParseIntPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { Paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
+import { Pagination } from 'nestjs-typeorm-paginate';
 import { SkipAuth } from '../decorators/skip-auth.decorator';
 import { Review } from './review.entity';
 import { ReviewsService } from './reviews.service';
@@ -27,13 +27,19 @@ export class ReviewsController {
   @Get()
   @ApiOkResponse({
     description: 'Get reviews by productId.',
-    type: Paginated,
+    type: Pagination,
   })
   findByProductId(
     @Query('productId') productId: string,
-    @Paginate() query: PaginateQuery,
-  ): Promise<Paginated<Review>> {
-    return this.reviewsService.findByProductId(+productId, query);
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+  ): Promise<Pagination<Review>> {
+    limit = limit > 100 ? 100 : limit;
+    return this.reviewsService.findByProductId(+productId, {
+      page,
+      limit,
+      route: '/reviews?productId=' + productId,
+    });
   }
 
   @SkipAuth()
