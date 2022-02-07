@@ -1,6 +1,6 @@
-import { ClassSerializerInterceptor, Controller, Get, Param, UseInterceptors } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Query, UseInterceptors } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { Paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
+import { Pagination } from 'nestjs-typeorm-paginate';
 import { Product } from './product.entity';
 import { ProductsService } from './products.service';
 import { SkipAuth } from '../decorators/skip-auth.decorator';
@@ -15,10 +15,18 @@ export class ProductsController {
   @Get()
   @ApiOkResponse({
     description: 'Get all products.',
-    type: Paginated,
+    type: Pagination,
   })
-  findAll(@Paginate() query: PaginateQuery): Promise<Paginated<Product>> {
-    return this.productsService.findAll(query);
+  findAll(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+  ): Promise<Pagination<Product>> {
+    limit = limit > 100 ? 100 : limit;
+    return this.productsService.findAll({
+      page,
+      limit,
+      route: '/products',
+    });
   }
 
   @SkipAuth()

@@ -1,6 +1,6 @@
-import { ClassSerializerInterceptor, Controller, Get, Param, Request, UseInterceptors } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Query, Request, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { Paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
+import { Pagination } from 'nestjs-typeorm-paginate';
 import { Order } from './order.entity';
 import { OrdersService } from './orders.service';
 
@@ -14,11 +14,20 @@ export class OrdersController {
   @Get()
   @ApiOkResponse({
     description: 'Get all orders.',
-    type: Paginated,
+    type: Pagination,
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
-  findAll(@Request() req, @Paginate() query: PaginateQuery): Promise<Paginated<Order>> {
-    return this.ordersService.findAll(req.user.userId, query);
+  findAll(
+    @Request() req,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+  ): Promise<Pagination<Order>> {
+    limit = limit > 100 ? 100 : limit;
+    return this.ordersService.findAll(req.user.userId, {
+      page,
+      limit,
+      route: '/orders',
+    });
   }
 
   @Get(':id')
