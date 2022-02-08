@@ -1,0 +1,24 @@
+<p>Hey {{ name }},</p>
+<p>You successfully bought in our store</p>
+<p>Products:</p>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Color</th>
+      <th>Price</th>
+      <th>Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+  {{#each products}}
+    <tr>
+      <td>{{ this.type }}</td>
+      <td>{{ this.color }}</td>
+      <td>{{ this.price }}</td>
+      <td>{{ this.quantity }}</td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
+<p>For the total amount: ${{ totalSum }}</p>

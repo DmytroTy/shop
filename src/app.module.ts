@@ -12,6 +12,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { PaymentModule } from './payment/payment.module';
 import { LoggerModule } from './logger/logger.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ReviewsModule } from './reviews/reviews.module';
     PaymentModule,
     LoggerModule,
     ReviewsModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [

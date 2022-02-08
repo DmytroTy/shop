@@ -3,10 +3,11 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
-import { Payment } from './payment.entity';
 import { Status } from '../enums/status.enum';
 import { LoggerWinston } from '../logger/logger-winston.service';
+import { MailService } from '../mail/mail.service';
 import { Order } from '../orders/order.entity';
+import { Payment } from './payment.entity';
 import { Product } from '../products/product.entity';
 
 @Injectable()
@@ -15,6 +16,7 @@ export class PaymentService {
     private connection: Connection,
     private readonly configService: ConfigService,
     private readonly logger: LoggerWinston,
+    private readonly mailService: MailService,
     @InjectRepository(Order)
     private ordersRepository: Repository<Order>,
     @InjectRepository(Product)
@@ -135,6 +137,9 @@ export class PaymentService {
 
       await queryRunner.commitTransaction();
 
+      this.mailService.sendUserNotification(userId, orderProducts, totalSum)
+        .catch(error => { this.logger.error(`Mail error: ${error.message}`, 'PaymentService.sale'); });
+
       return { success };
 
     } catch (err) {
@@ -147,6 +152,10 @@ export class PaymentService {
 
       if (err instanceof BadRequestException) {
         this.logger.warn(`User error: ${err.message}`, 'PaymentService');
+
+        this.mailService.sendUserErrorNotification(userId, err.message)
+          .catch(error => { this.logger.error(`Mail error: ${error.message}`, 'PaymentService.sale'); });
+
         throw err;
       }
 
