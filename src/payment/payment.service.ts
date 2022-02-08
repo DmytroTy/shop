@@ -15,6 +15,8 @@ export class PaymentService {
     private connection: Connection,
     private readonly configService: ConfigService,
     private readonly logger: LoggerWinston,
+    @InjectRepository(Order)
+    private ordersRepository: Repository<Order>,
     @InjectRepository(Product)
     private productsRepository: Repository<Product>,
     @InjectRepository(Payment)
@@ -90,7 +92,7 @@ export class PaymentService {
         }
       }
 
-      const order = await queryRunner.manager.save(Order, {
+      const order = await this.ordersRepository.save({
         buyer: { id: userId },
         orderProducts,
       });
@@ -113,11 +115,8 @@ export class PaymentService {
       });
 
       if (!success) {
-        for (const productOrder of orderProducts) {
-          await queryRunner.manager.increment(Product, { id: productOrder.id }, 'quantity', productOrder.quantity);
-        }
         order.status = Status.CANCELED;
-        await queryRunner.manager.update(Order, order.id, order);
+        await this.ordersRepository.update(order.id, order);
 
         throw new BadRequestException(message);
       }
