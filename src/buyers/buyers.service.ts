@@ -17,7 +17,7 @@ export class BuyersService {
   }
 
   async findOne(email: string): Promise<Buyer> {
-    return this.buyersRepository.findOne({ email }, { select: ["id", "email", "username", "password"] });
+    return this.buyersRepository.findOne({ email });
   }
 
   async update(id: number, updateBuyerDto: UpdateBuyerDto, userId: number): Promise<UpdateResult> {
