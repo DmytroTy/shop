@@ -27,19 +27,28 @@ export class ReviewsController {
   @SkipAuth()
   @Get()
   @ApiOkResponse({
-    description: 'Get reviews by productId.',
+    description: 'Get reviews by productId or userId.',
     type: Pagination,
   })
-  findByProductId(
+  findByProductOrUserId(
+    @Request() req,
     @Query('productId') productId: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
   ): Promise<Pagination<Review>> {
     limit = limit > 100 ? 100 : limit;
-    return this.reviewsService.findByProductId(+productId, {
+
+    if (productId.length > 0) {
+      return this.reviewsService.findByProductId(+productId, {
+        page,
+        limit,
+        route: '/reviews?productId=' + productId,
+      });
+    }
+    return this.reviewsService.findByUserId(req.user.userId, {
       page,
       limit,
-      route: '/reviews?productId=' + productId,
+      route: '/reviews',
     });
   }
 

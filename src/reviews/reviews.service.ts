@@ -29,6 +29,15 @@ export class ReviewsService {
     return paginate<Review>(queryBuilder, options);
   }
 
+  async findByUserId(userId: number, options: IPaginationOptions): Promise<Pagination<Review>> {
+    const queryBuilder = this.reviewsRepository
+      .createQueryBuilder('review')
+      .where("review.buyerId = :userId", { userId })
+      .orderBy('review.id', 'DESC');
+
+    return paginate<Review>(queryBuilder, options);
+  }
+
   async findOne(id: number): Promise<Review> {
     const review = await this.reviewsRepository.findOne(id);
 
