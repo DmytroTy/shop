@@ -1,6 +1,6 @@
 import { ReviewAccessGuard } from './api/middleware/review-access.guard';
 import { Controller, Get, Post, Body, Patch, Param, Request, Query, DefaultValuePipe, ParseIntPipe, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { SkipAuth } from '../decorators/skip-auth.decorator';
 import { Review } from './review.entity';
@@ -30,6 +30,8 @@ export class ReviewsController {
     description: 'Get reviews by productId.',
     type: Pagination,
   })
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
   findByProductId(
     @Query('productId') productId: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,

@@ -1,5 +1,5 @@
 import { ClassSerializerInterceptor, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Query, Request, UseInterceptors } from '@nestjs/common';
-import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { Order } from './order.entity';
 import { OrdersService } from './orders.service';
@@ -17,6 +17,8 @@ export class OrdersController {
     type: Pagination,
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
   findAll(
     @Request() req,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
