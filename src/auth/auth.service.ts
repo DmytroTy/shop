@@ -34,6 +34,24 @@ export class AuthService {
     };
   }
 
+  async facebookLogin(user: any) {
+    let buyer = await this.buyersService.findOne(user.email);
+    if (!buyer) {
+      buyer = await this.buyersService.findOneByFacebookId(user.facebookId);
+    }
+    if (!buyer) {
+      buyer = await this.buyersService.create({
+        email: user.email,
+        username: user.firstName,
+        facebookId: user.facebookId,
+      });
+    }
+    const payload = { email: user.email, sub: buyer.id };
+    return {
+      accessToken: this.jwtService.sign(payload),
+    };
+  }
+
   async register(createBuyerDto: CreateBuyerDto) {
     const saltOrRounds = 10;
     const pass = createBuyerDto.password;

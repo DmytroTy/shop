@@ -20,6 +20,10 @@ export class BuyersService {
     return this.buyersRepository.findOne({ email });
   }
 
+  async findOneByFacebookId(facebookId: string): Promise<Buyer> {
+    return this.buyersRepository.findOne({ facebookId });
+  }
+
   async update(id: number, updateBuyerDto: UpdateBuyerDto, userId: number): Promise<UpdateResult> {
     return this.buyersRepository.update(userId, updateBuyerDto);
   }
