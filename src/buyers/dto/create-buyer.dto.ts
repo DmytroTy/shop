@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateBuyerDto {
   @ApiProperty()
@@ -8,5 +8,8 @@ export class CreateBuyerDto {
   readonly username: string;
 
   @ApiProperty()
-  password: string;
+  password?: string;
+
+  @ApiPropertyOptional()
+  readonly facebookId?: string;
 }

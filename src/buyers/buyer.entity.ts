@@ -17,21 +17,24 @@ export class Buyer {
   @Column()
   username: string;
 
-  @Column()
+  @Column({ nullable: true })
   @Exclude()
-  password: string;
+  password?: string;
 
   @Column({
+    unique: true,
     nullable: true,
-    default: null
   })
+  @Exclude()
+  facebookId?: string;
+
+  @Column({ nullable: true })
   @Exclude()
   refreshToken?: string;
 
   @Column({
     type: "timestamp",
     nullable: true,
-    default: null
   })
   @Exclude()
   expiresIn?: Date;
