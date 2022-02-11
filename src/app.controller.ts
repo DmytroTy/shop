@@ -47,6 +47,7 @@ export class AppController {
   }
 
   @SkipAuth()
+  @UseInterceptors(ClassSerializerInterceptor) // Not work here!
   @Post('auth/register')
   @HttpCode(HttpStatus.CREATED)
   @ApiCreatedResponse({
@@ -55,7 +56,7 @@ export class AppController {
   })
   @ApiConflictResponse({ description: 'A user with this email already exists!' })
   @ApiInternalServerErrorResponse({ description: 'Failed to create user account.' })
-  async register(@Body() createBuyerDto: CreateBuyerDto) {
+  async register(@Body() createBuyerDto: CreateBuyerDto): Promise<Buyer> {
     return this.authService.register(createBuyerDto);
   }
 

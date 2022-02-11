@@ -34,7 +34,7 @@ export class AuthService {
     };
   }
 
-  async register(createBuyerDto: CreateBuyerDto) {
+  async register(createBuyerDto: CreateBuyerDto): Promise<Buyer> {
     const saltOrRounds = 10;
     const pass = createBuyerDto.password;
     createBuyerDto.password = await bcrypt.hash(pass, saltOrRounds);
