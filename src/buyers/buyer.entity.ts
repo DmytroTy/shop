@@ -1,6 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Order } from '../orders/order.entity';
 
 @Entity()
@@ -9,9 +9,12 @@ export class Buyer {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty()
-  @Column({ unique: true })
-  email: string;
+  @ApiPropertyOptional()
+  @Column({
+    unique: true,
+    nullable: true,
+  })
+  email?: string;
 
   @ApiProperty()
   @Column()
