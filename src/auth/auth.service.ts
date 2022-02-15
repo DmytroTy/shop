@@ -36,9 +36,15 @@ export class AuthService {
 
   async facebookLogin(user: any) {
     let buyer = await this.buyersService.findOne(user.email);
+    if (buyer && !buyer.facebookId) {
+      buyer.facebookId = user.facebookId;
+      await this.buyersService.update(buyer.id, user.facebookId, buyer.id);
+    }
+
     if (!buyer) {
       buyer = await this.buyersService.findOneByFacebookId(user.facebookId);
     }
+
     if (!buyer) {
       buyer = await this.buyersService.create({
         email: user.email,
@@ -46,7 +52,8 @@ export class AuthService {
         facebookId: user.facebookId,
       });
     }
-    const payload = { email: user.email, sub: buyer.id };
+
+    const payload = { email: buyer.email, sub: buyer.id };
     return {
       accessToken: this.jwtService.sign(payload),
     };

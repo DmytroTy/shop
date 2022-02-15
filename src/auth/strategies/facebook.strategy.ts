@@ -27,10 +27,6 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "facebook") {
       lastName: name.familyName,
       facebookId: id,
     };
-    /* const payload = {
-      user,
-      accessToken,
-    }; */
 
     done(null, user);
   }
