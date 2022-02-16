@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 import { Repository, UpdateResult } from 'typeorm';
 import { Buyer } from './buyer.entity';
 import { CreateBuyerDto } from './dto/create-buyer.dto';
@@ -25,6 +26,11 @@ export class BuyersService {
   }
 
   async update(id: number, updateBuyerDto: UpdateBuyerDto, userId: number): Promise<UpdateResult> {
+    if (updateBuyerDto.password) {
+      const saltOrRounds = 10;
+      const pass = updateBuyerDto.password;
+      updateBuyerDto.password = await bcrypt.hash(pass, saltOrRounds);
+    }
     return this.buyersRepository.update(userId, updateBuyerDto);
   }
 

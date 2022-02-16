@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -9,6 +10,14 @@ async function bootstrap() {
   app.useLogger(app.get(LoggerWinston));
 
   app.enableCors();
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      // transform: true,
+    }),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Shop')
