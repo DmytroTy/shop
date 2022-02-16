@@ -40,7 +40,7 @@ export class ProductsController {
     type: Product,
   })
   @ApiNotFoundResponse({ description: 'No record with this ID found!' })
-  findOne(@Param('id') id: string): Promise<Product> {
-    return this.productsService.findOne(+id);
+  findOne(@Param('id') id: number): Promise<Product> {
+    return this.productsService.findOne(id);
   }
 }

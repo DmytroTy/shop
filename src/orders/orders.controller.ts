@@ -39,7 +39,7 @@ export class OrdersController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
   @ApiNotFoundResponse({ description: 'No record of order with this ID found!' })
-  findOne(@Param('id') id: string, @Request() req): Promise<Order> {
-    return this.ordersService.findOne(+id, req.user.userId);
+  findOne(@Param('id') id: number, @Request() req): Promise<Order> {
+    return this.ordersService.findOne(id, req.user.userId);
   }
 }

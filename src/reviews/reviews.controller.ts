@@ -33,12 +33,12 @@ export class ReviewsController {
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'limit', required: false })
   findByProductId(
-    @Query('productId') productId: string,
+    @Query('productId') productId: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
   ): Promise<Pagination<Review>> {
     limit = limit > 100 ? 100 : limit;
-    return this.reviewsService.findByProductId(+productId, {
+    return this.reviewsService.findByProductId(productId, {
       page,
       limit,
       route: '/reviews?productId=' + productId,
@@ -52,8 +52,8 @@ export class ReviewsController {
     type: Review,
   })
   @ApiNotFoundResponse({ description: 'No record with this ID found!' })
-  findOne(@Param('id') id: string) {
-    return this.reviewsService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.reviewsService.findOne(id);
   }
 
   @UseGuards(ReviewAccessGuard)
@@ -65,7 +65,7 @@ export class ReviewsController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
   @ApiForbiddenResponse({ description: 'Forbidden!'})
-  update(@Param('id') id: string, @Body() updateReviewDto: UpdateReviewDto) {
-    return this.reviewsService.update(+id, updateReviewDto);
+  update(@Param('id') id: number, @Body() updateReviewDto: UpdateReviewDto) {
+    return this.reviewsService.update(id, updateReviewDto);
   }
 }

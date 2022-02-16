@@ -17,7 +17,7 @@ export class BuyersController {
     type: Buyer,
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
-  update(@Param('id') id: string, @Body() updateBuyerDto: UpdateBuyerDto, @Request() req): Promise<UpdateResult> {
-    return this.buyersService.update(+id, updateBuyerDto, req.user.userId);
+  update(@Param('id') id: number, @Body() updateBuyerDto: UpdateBuyerDto, @Request() req): Promise<UpdateResult> {
+    return this.buyersService.update(id, updateBuyerDto, req.user.userId);
   }
 }
