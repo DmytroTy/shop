@@ -11,6 +11,7 @@ import { LoggerWinston } from '../logger/logger-winston.service';
 
 describe('AuthService', () => {
   let authService: AuthService;
+  let buyersService: BuyersService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -31,6 +32,7 @@ describe('AuthService', () => {
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
+    buyersService = module.get<BuyersService>(BuyersService);
   });
 
   it('authService should be defined', () => {
@@ -54,6 +56,99 @@ describe('AuthService', () => {
       const email = 'test@test.com';
       const pass = 'tst';
       expect(await authService.validateUser(email, pass)).toBeNull();
+    });
+  });
+
+  describe('facebookLogin', () => {
+    it('user with stored e-mail address and facebookId have been passed - must return a object with field "accessToken"', async () => {
+      const user = {
+        email: 'test@test.com',
+        facebookId: '00000007',
+      };
+      buyersService.findOne = jest.fn().mockReturnValueOnce({
+        id: 1,
+        username: 'test',
+        email: 'test@test.com',
+        facebookId: '00000007',
+        password: '$2b$10$qJMKL4a8RkUB/hh2yK0ZFO0ZFzvlhEJDrd8FlCEeS1xnZIjvKjJku',
+      });
+      buyersService.update = jest.fn();
+      buyersService.findOneByFacebookId = jest.fn();
+      buyersService.create = jest.fn();
+
+      expect(await authService.facebookLogin(user)).toHaveProperty('accessToken');
+      expect(buyersService.findOne).toHaveBeenCalledTimes(1);
+      expect(buyersService.update).toHaveBeenCalledTimes(0);
+      expect(buyersService.findOneByFacebookId).toHaveBeenCalledTimes(0);
+      expect(buyersService.create).toHaveBeenCalledTimes(0);
+    });
+
+    it('user with stored e-mail address but unstored facebookId have been passed - must return a object with field "accessToken"', async () => {
+      const user = {
+        email: 'test@test.com',
+        facebookId: '00000008',
+      };
+      buyersService.findOne = jest.fn().mockReturnValueOnce({
+        id: 1,
+        username: 'test',
+        email: 'test@test.com',
+        password: '$2b$10$qJMKL4a8RkUB/hh2yK0ZFO0ZFzvlhEJDrd8FlCEeS1xnZIjvKjJku',
+      });
+      buyersService.update = jest.fn();
+      buyersService.findOneByFacebookId = jest.fn();
+      buyersService.create = jest.fn();
+
+      expect(await authService.facebookLogin(user)).toHaveProperty('accessToken');
+      expect(buyersService.findOne).toHaveBeenCalledTimes(1);
+      expect(buyersService.update).toHaveBeenCalledTimes(1);
+      expect(buyersService.findOneByFacebookId).toHaveBeenCalledTimes(0);
+      expect(buyersService.create).toHaveBeenCalledTimes(0);
+    });
+
+    it('user with unstored email address but stored facebookId have been passed - must return a object with field "accessToken"', async () => {
+      const user = {
+        email: 'test2@test.com',
+        facebookId: '00000007',
+      };
+      buyersService.findOne = jest.fn().mockReturnValueOnce(null);
+      buyersService.update = jest.fn();
+      buyersService.findOneByFacebookId = jest.fn().mockReturnValueOnce({
+        id: 2,
+        username: 'test',
+        email: 'test@test.com',
+        facebookId: '00000007',
+        password: '$2b$10$qJMKL4a8RkUB/hh2yK0ZFO0ZFzvlhEJDrd8FlCEeS1xnZIjvKjJku',
+      });
+      buyersService.create = jest.fn();
+
+      expect(await authService.facebookLogin(user)).toHaveProperty('accessToken');
+      expect(buyersService.findOne).toHaveBeenCalledTimes(1);
+      expect(buyersService.update).toHaveBeenCalledTimes(0);
+      expect(buyersService.findOneByFacebookId).toHaveBeenCalledTimes(1);
+      expect(buyersService.create).toHaveBeenCalledTimes(0);
+    });
+
+    it('user with unstored email address and facebookId have been passed - must return a object with field "accessToken"', async () => {
+      const user = {
+        email: 'test3@test.com',
+        facebookId: '00000008',
+        username: 'test',
+      };
+      buyersService.findOne = jest.fn().mockReturnValueOnce(null);
+      buyersService.update = jest.fn();
+      buyersService.findOneByFacebookId = jest.fn().mockReturnValueOnce(null);
+      buyersService.create = jest.fn().mockReturnValueOnce({
+        id: 3,
+        username: 'test',
+        email: 'test3@test.com',
+        facebookId: '00000008',
+      });
+
+      expect(await authService.facebookLogin(user)).toHaveProperty('accessToken');
+      expect(buyersService.findOne).toHaveBeenCalledTimes(1);
+      expect(buyersService.update).toHaveBeenCalledTimes(0);
+      expect(buyersService.findOneByFacebookId).toHaveBeenCalledTimes(1);
+      expect(buyersService.create).toHaveBeenCalledTimes(1);
     });
   });
 
