@@ -37,8 +37,7 @@ export class AuthService {
   async facebookLogin(user: any) {
     let buyer = await this.buyersService.findOne(user.email);
     if (buyer && !buyer.facebookId) {
-      buyer.facebookId = user.facebookId;
-      await this.buyersService.update(buyer.id, user.facebookId, buyer.id);
+      await this.buyersService.update(buyer.id, { facebookId: user.facebookId }, buyer.id);
     }
 
     if (!buyer) {
