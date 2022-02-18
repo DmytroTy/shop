@@ -1,6 +1,6 @@
 import { ReviewAccessGuard } from './api/middleware/review-access.guard';
 import { Controller, Get, Post, Body, Patch, Param, Request, Query, DefaultValuePipe, ParseIntPipe, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { SkipAuth } from '../decorators/skip-auth.decorator';
 import { Review } from './review.entity';
@@ -30,16 +30,19 @@ export class ReviewsController {
     description: 'Get reviews by productId or userId.',
     type: Pagination,
   })
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
+  @ApiQuery({ name: 'productId', required: false })
   findByProductOrUserId(
     @Request() req,
-    @Query('productId') productId: string,
+    @Query('productId') productId: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
   ): Promise<Pagination<Review>> {
     limit = limit > 100 ? 100 : limit;
 
-    if (productId.length > 0) {
-      return this.reviewsService.findByProductId(+productId, {
+    if (productId) {
+      return this.reviewsService.findByProductId(productId, {
         page,
         limit,
         route: '/reviews?productId=' + productId,
@@ -59,8 +62,8 @@ export class ReviewsController {
     type: Review,
   })
   @ApiNotFoundResponse({ description: 'No record with this ID found!' })
-  findOne(@Param('id') id: string) {
-    return this.reviewsService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.reviewsService.findOne(id);
   }
 
   @UseGuards(ReviewAccessGuard)
@@ -72,7 +75,7 @@ export class ReviewsController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
   @ApiForbiddenResponse({ description: 'Forbidden!'})
-  update(@Param('id') id: string, @Body() updateReviewDto: UpdateReviewDto) {
-    return this.reviewsService.update(+id, updateReviewDto);
+  update(@Param('id') id: number, @Body() updateReviewDto: UpdateReviewDto) {
+    return this.reviewsService.update(id, updateReviewDto);
   }
 }

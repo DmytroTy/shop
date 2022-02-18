@@ -13,7 +13,7 @@ export class MailService {
     private buyersRepository: Repository<Buyer>,
   ) {}
 
-  async sendUserNotification(userID: number, products: [Product], totalSum: number) {
+  async sendUserNotification(userID: number, products: Product[], totalSum: number) {
     const buyer = await this.buyersRepository.findOne(userID);
 
     await this.mailerService.sendMail({

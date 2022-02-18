@@ -1,5 +1,7 @@
-import { Controller, Body, Get, Request, Post, HttpCode, HttpStatus, UseGuards, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
+import { Controller, Body, Get, Req, Post, HttpCode, HttpStatus, UseGuards, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiConflictResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { Request } from "express";
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/guards/local-auth.guard';
 import { SkipAuth } from './decorators/skip-auth.decorator';
@@ -42,7 +44,7 @@ export class AppController {
       },
     },
   })
-  async login(@Request() req) {
+  async login(@Req() req: Request) {
     return this.authService.login(req.user);
   }
 
@@ -59,6 +61,31 @@ export class AppController {
     return this.authService.register(createBuyerDto);
   }
 
+  @SkipAuth()
+  @Get("/facebook")
+  @UseGuards(AuthGuard("facebook"))
+  async facebookLogin(): Promise<any> {
+    return HttpStatus.OK;
+  }
+
+  @SkipAuth()
+  @Get("/facebook/redirect")
+  @UseGuards(AuthGuard("facebook"))
+  @ApiCreatedResponse({
+    description: 'User successfully logined by facebook.',
+    schema: {
+      type: 'object',
+      properties: {
+        accessToken: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  async facebookLoginRedirect(@Req() req: Request): Promise<any> {
+    return this.authService.facebookLogin(req.user);
+  }
+
   @ApiBearerAuth()
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('profile')
@@ -67,7 +94,7 @@ export class AppController {
     type: Buyer,
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
-  async getProfile(@Request() req): Promise<Buyer> {
+  async getProfile(@Req() req): Promise<Buyer> {
     return this.buyersService.findOne(req.user.email);
   }
 }

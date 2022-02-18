@@ -17,7 +17,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     const user = await this.authService.validateUser(email, password);
 
     if (!user) {
-      this.logger.warn('User error: ', `UnauthorizedException user with email = ${email} and password = ${password} not found.`);
+      this.logger.warn(`User error: user with email = ${email} not found or entered incorrect password.`, 'LocalStrategy');
       throw new UnauthorizedException();
     }
     return user;
