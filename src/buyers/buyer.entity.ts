@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Order } from '../orders/order.entity';
@@ -7,10 +8,12 @@ import { Order } from '../orders/order.entity';
 @Entity()
 export class Buyer {
   @Field(type => Int)
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
   @Field({ nullable: true })
+  @ApiPropertyOptional()
   @Column({
     unique: true,
     nullable: true,
@@ -18,6 +21,7 @@ export class Buyer {
   email?: string;
 
   @Field()
+  @ApiProperty()
   @Column()
   username: string;
 
