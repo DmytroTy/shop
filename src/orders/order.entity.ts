@@ -1,17 +1,18 @@
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Exclude } from 'class-transformer';
 import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
 import { Buyer } from '../buyers/buyer.entity';
 import { Product } from '../products/product.entity';
 import { Status } from '../enums/status.enum';
 
+@ObjectType({ description: 'Order model' })
 @Entity()
 export class Order {
-  @ApiProperty()
+  @Field(type => Int)
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty({ enum: Status, enumName: 'Status' })
+  @Field(type => Status)
   @Column({
     type: "enum",
     enum: Status,
@@ -26,7 +27,7 @@ export class Order {
   @ManyToOne(type => Buyer, buyer => buyer.orders)
   buyer: Buyer;
 
-  @ApiProperty({ type: [Product] })
+  @Field(type => [Product])
   @Column("simple-json")
   orderProducts: Product[];
 }

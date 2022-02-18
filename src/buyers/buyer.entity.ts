@@ -1,22 +1,23 @@
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Exclude } from 'class-transformer';
 import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Order } from '../orders/order.entity';
 
+@ObjectType({ description: 'Buyer model' })
 @Entity()
 export class Buyer {
-  @ApiProperty()
+  @Field(type => Int)
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiPropertyOptional()
+  @Field({ nullable: true })
   @Column({
     unique: true,
     nullable: true,
   })
   email?: string;
 
-  @ApiProperty()
+  @Field()
   @Column()
   username: string;
 
@@ -46,6 +47,7 @@ export class Buyer {
   @Exclude()
   deletedAt?: Date;
 
+  @Field(type => [Order], { nullable: true })
   @OneToMany(type => Order, order => order.buyer)
   orders?: Order[];
 }

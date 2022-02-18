@@ -1,28 +1,29 @@
+import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { Exclude } from 'class-transformer';
 import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, Check, OneToMany } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
 import { Review } from '../reviews/review.entity';
 
+@ObjectType({ description: 'Product model' })
 @Entity()
 @Check(`"quantity" >= 0`)
 export class Product {
-  @ApiProperty()
+  @Field(type => Int)
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty()
+  @Field()
   @Column()
   type: string;
 
-  @ApiProperty()
+  @Field()
   @Column()
   color: string;
 
-  @ApiProperty()
+  @Field(type => Float)
   @Column("decimal")
   price: number;
 
-  @ApiProperty()
+  @Field(type => Int)
   @Column({ default: 0 })
   quantity: number;
 
@@ -30,6 +31,7 @@ export class Product {
   @Exclude()
   deletedAt?: Date;
 
+  @Field(type => [Review], { nullable: true })
   @OneToMany(type => Review, review => review.product)
   reviews?: Review[];
 }
