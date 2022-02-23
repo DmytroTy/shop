@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerModule } from '../logger/logger.module';
-import { ProductsService } from './products.service';
-import { ProductsController } from './products.controller';
 import { Product } from './product.entity';
+import { ProductsController } from './products.controller';
+import { ProductsResolver } from './products.resolver';
+import { ProductsService } from './products.service';
 import { ReviewsModule } from '../reviews/reviews.module';
 
 @Module({
@@ -13,6 +14,6 @@ import { ReviewsModule } from '../reviews/reviews.module';
     TypeOrmModule.forFeature([Product]),
   ],
   controllers: [ProductsController],
-  providers: [ProductsService],
+  providers: [ProductsService, ProductsResolver],
 })
 export class ProductsModule {}
