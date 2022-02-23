@@ -1,0 +1,121 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""Review model"""
+type Review {
+  id: Int!
+  rating: Int
+  comment: String!
+}
+
+"""Product model"""
+type Product {
+  id: Int!
+  type: String!
+  color: String!
+  price: Float!
+  quantity: Int!
+  reviews: [Review!]
+}
+
+"""Order model"""
+type Order {
+  id: Int!
+  status: Status!
+  orderProducts: [Product!]!
+}
+
+"""The supported order statuses"""
+enum Status {
+  OPENLY
+  PROCESSED
+  CANCELED
+}
+
+"""Buyer model"""
+type Buyer {
+  id: Int!
+  email: String
+  username: String!
+  orders: [Order!]
+}
+
+type LoginResult {
+  accessToken: String!
+}
+
+type MetaType {
+  totalItems: Int!
+  itemCount: Int!
+  itemsPerPage: Int!
+  totalPages: Int!
+  currentPage: Int!
+}
+
+type PaginatedOrder {
+  items: [Order]!
+  meta: MetaType!
+}
+
+type PaginatedProduct {
+  items: [Product]!
+  meta: MetaType!
+}
+
+type PaginatedReview {
+  items: [Review]!
+  meta: MetaType!
+}
+
+type Query {
+  profile: Buyer!
+  products(page: Int = 1, limit: Int = 10): PaginatedProduct
+  product(id: Int!): Product
+  reviews(productId: Int!, page: Int = 1, limit: Int = 10): PaginatedReview
+  review(id: Int!): Review
+  orders(page: Int = 1, limit: Int = 10): PaginatedOrder
+  order(id: Int!): Order
+}
+
+type Mutation {
+  login(loginData: LoginInput!): LoginResult!
+  register(createBuyerData: CreateBuyerDto!): Buyer!
+  updateBuyer(id: Int!, updateBuyerData: UpdateBuyerInput!): Buyer!
+  createReview(createReviewData: CreateReviewDto!): Review!
+  updateReview(id: Int!, updateReviewData: UpdateReviewInput!): Review!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input CreateBuyerDto {
+  email: String!
+  username: String!
+  password: String
+  facebookId: String
+}
+
+input UpdateBuyerInput {
+  email: String
+  username: String
+  password: String
+  facebookId: String
+}
+
+input CreateReviewDto {
+  rating: Int
+  comment: String!
+  product: IdType!
+}
+
+input IdType {
+  id: Int!
+}
+
+input UpdateReviewInput {
+  rating: Int
+  comment: String
+}

@@ -1,5 +1,5 @@
-import { Get, Req, Post, HttpStatus, UseGuards, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Req, HttpStatus, UseGuards, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
+import { Args, Field, Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from "express";
 import { AuthService } from './auth/auth.service';
@@ -8,6 +8,13 @@ import { SkipAuth } from './decorators/skip-auth.decorator';
 import { Buyer } from './buyers/buyer.entity';
 import { CreateBuyerDto } from './buyers/dto/create-buyer.dto';
 import { BuyersService } from './buyers/buyers.service';
+import { LoginInput } from './dto/login.input';
+
+@ObjectType({ description: 'Success login response data' })
+class LoginResult {
+  @Field()
+  accessToken: string;
+}
 
 @Resolver()
 export class AppResolver {
@@ -16,32 +23,20 @@ export class AppResolver {
     private buyersService: BuyersService,
   ) {}
 
-  /* @SkipAuth()
+  @SkipAuth()
   @UseGuards(LocalAuthGuard)
-  @Post('auth/login')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        email: {
-          type: 'string',
-        },
-        password: {
-          type: 'string',
-        },
-      },
-    },
-  })
-  login(@Req() req: Request) {
+  @Mutation(returns => LoginResult)
+  login(@Req() req: Request, @Args('loginData') loginData: LoginInput) {
+    // loginData
     return this.authService.login(req.user);
-  } */
+  }
 
   @SkipAuth()
   @Mutation(returns => Buyer)
   @UseInterceptors(ClassSerializerInterceptor)
   // @HttpCode(HttpStatus.CREATED)
-  register(@Args('createBuyerDto') createBuyerDto: CreateBuyerDto) {
-    return this.authService.register(createBuyerDto);
+  register(@Args('createBuyerData') createBuyerData: CreateBuyerDto) {
+    return this.authService.register(createBuyerData);
   }
 
   /* @SkipAuth()

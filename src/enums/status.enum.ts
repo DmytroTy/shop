@@ -8,6 +8,6 @@ export enum Status {
 
 registerEnumType(Status, {
   name: 'Status',
-  description: 'The supported order statuses.',
+  description: 'The supported order statuses',
 });
 
