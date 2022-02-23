@@ -9,6 +9,20 @@ type Review {
   comment: String!
 }
 
+"""Pagination metainformation"""
+type MetaType {
+  totalItems: Int!
+  itemCount: Int!
+  itemsPerPage: Int!
+  totalPages: Int!
+  currentPage: Int!
+}
+
+type PaginatedReview {
+  items: [Review]!
+  meta: MetaType!
+}
+
 """Product model"""
 type Product {
   id: Int!
@@ -16,7 +30,7 @@ type Product {
   color: String!
   price: Float!
   quantity: Int!
-  reviews: [Review!]
+  reviews: PaginatedReview
 }
 
 """Order model"""
@@ -33,38 +47,26 @@ enum Status {
   CANCELED
 }
 
-"""Buyer model"""
-type Buyer {
-  id: Int!
-  email: String
-  username: String!
-  orders: [Order!]
-}
-
-type LoginResult {
-  accessToken: String!
-}
-
-type MetaType {
-  totalItems: Int!
-  itemCount: Int!
-  itemsPerPage: Int!
-  totalPages: Int!
-  currentPage: Int!
-}
-
 type PaginatedOrder {
   items: [Order]!
   meta: MetaType!
 }
 
-type PaginatedProduct {
-  items: [Product]!
-  meta: MetaType!
+"""Buyer model"""
+type Buyer {
+  id: Int!
+  email: String
+  username: String!
+  orders: PaginatedOrder
 }
 
-type PaginatedReview {
-  items: [Review]!
+"""Success login response data"""
+type LoginResult {
+  accessToken: String!
+}
+
+type PaginatedProduct {
+  items: [Product]!
   meta: MetaType!
 }
 
@@ -86,6 +88,7 @@ type Mutation {
   updateReview(id: Int!, updateReviewData: UpdateReviewInput!): Review!
 }
 
+"""Data for authorization"""
 input LoginInput {
   email: String!
   password: String!

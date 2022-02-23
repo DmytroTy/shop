@@ -7,7 +7,7 @@ import { OrdersService } from './orders.service';
 import { Paginated } from '../types/paginated.type';
 
 @ObjectType()
-class PaginatedOrder extends Paginated(Order) {}
+export class PaginatedOrder extends Paginated(Order) {}
 
 @Resolver(/* of => Order */)
 // @ApiBearerAuth()
@@ -17,11 +17,7 @@ export class OrdersResolver {
 
   @Query(returns => PaginatedOrder, { nullable: true })
   orders(@Request() req, @Args() paginationArgs: PaginationArgs): Promise<Pagination<Order>> {
-    // limit = limit > 100 ? 100 : limit;
-    return this.ordersService.findAll(req.user.userId, {
-      ...paginationArgs,
-      route: '/orders',
-    });
+    return this.ordersService.findAll(req.user.userId, paginationArgs);
   }
 
   @Query(returns => Order, { nullable: true })

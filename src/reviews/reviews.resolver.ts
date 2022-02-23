@@ -12,7 +12,7 @@ import { UpdateReviewInput } from './dto/update-review.input';
 import { Paginated } from '../types/paginated.type';
 
 @ObjectType()
-class PaginatedReview extends Paginated(Review) {}
+export class PaginatedReview extends Paginated(Review) {}
 
 @Resolver(/* of => Review */)
 export class ReviewsResolver {
@@ -30,11 +30,7 @@ export class ReviewsResolver {
     @Args('productId', { type: () => Int }) productId: number,
     @Args() paginationArgs: PaginationArgs,
   ): Promise<Pagination<Review>> {
-    // limit = limit > 100 ? 100 : limit;
-    return this.reviewsService.findByProductId(productId, {
-      ...paginationArgs,
-      route: '/reviews?productId=' + productId,
-    });
+    return this.reviewsService.findByProductId(productId, paginationArgs);
   }
 
   @SkipAuth()

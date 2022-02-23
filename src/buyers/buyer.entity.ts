@@ -3,6 +3,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Order } from '../orders/order.entity';
+import { PaginatedOrder } from '../orders/orders.resolver';
 
 @ObjectType({ description: 'Buyer model' })
 @Entity()
@@ -51,7 +52,7 @@ export class Buyer {
   @Exclude()
   deletedAt?: Date;
 
-  @Field(type => [Order], { nullable: true })
+  @Field(type => PaginatedOrder, { nullable: true })
   @OneToMany(type => Order, order => order.buyer)
   orders?: Order[];
 }

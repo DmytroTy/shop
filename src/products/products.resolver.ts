@@ -19,11 +19,7 @@ export class ProductsResolver {
   @SkipAuth()
   @Query(returns => PaginatedProduct, { nullable: true })
   products(@Args() paginationArgs: PaginationArgs): Promise<Pagination<Product>> {
-    // limit = limit > 100 ? 100 : limit;
-    return this.productsService.findAll({
-      ...paginationArgs,
-      route: '/products',
-    });
+    return this.productsService.findAll(paginationArgs);
   }
 
   @SkipAuth()

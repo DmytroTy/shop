@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, Check, OneToMany } from 'typeorm';
 import { Review } from '../reviews/review.entity';
+import { PaginatedReview } from '../reviews/reviews.resolver';
 
 @ObjectType({ description: 'Product model' })
 @Entity()
@@ -37,7 +38,7 @@ export class Product {
   @Exclude()
   deletedAt?: Date;
 
-  @Field(type => [Review], { nullable: true })
+  @Field(type => PaginatedReview, { nullable: true })
   @OneToMany(type => Review, review => review.product)
   reviews?: Review[];
 }

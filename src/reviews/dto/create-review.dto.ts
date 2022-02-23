@@ -1,6 +1,6 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, Min, Max } from 'class-validator';
+import { IsInstance, IsInt, IsNotEmpty, Min, Max } from 'class-validator';
 import { IdType } from '../../dto/id-input.type';
 
 @InputType()
@@ -19,5 +19,6 @@ export class CreateReviewDto {
 
   @Field(type => IdType)
   @ApiProperty()
+  @IsInstance(IdType)
   readonly product: IdType;
 }

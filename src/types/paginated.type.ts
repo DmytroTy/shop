@@ -1,7 +1,7 @@
 import { Field, ObjectType, Int } from '@nestjs/graphql';
 import { Type } from '@nestjs/common';
 
-@ObjectType()
+@ObjectType({ description: 'Pagination metainformation' })
 class MetaType {
   @Field((type) => Int)
   totalItems: number;
@@ -19,7 +19,7 @@ class MetaType {
   currentPage: number;
 }
 
-interface IPaginatedType<T> { // export
+export interface IPaginatedType<T> {
   items: T[];
   meta: MetaType;
 }
