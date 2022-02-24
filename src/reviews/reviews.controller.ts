@@ -2,7 +2,7 @@ import { ReviewAccessGuard } from './api/middleware/review-access.guard';
 import { Controller, Get, Post, Body, Patch, Param, Request, Query, DefaultValuePipe, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Pagination } from 'nestjs-typeorm-paginate';
-import { SkipAuth } from '../decorators/skip-auth.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Review } from './review.entity';
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
@@ -13,6 +13,7 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @ApiBearerAuth()
   @ApiCreatedResponse({
@@ -24,7 +25,6 @@ export class ReviewsController {
     return this.reviewsService.create(createReviewDto, req.user.userId);
   }
 
-  @SkipAuth()
   @Get()
   @ApiOkResponse({
     description: 'Get reviews by productId.',
@@ -45,7 +45,6 @@ export class ReviewsController {
     });
   }
 
-  @SkipAuth()
   @Get(':id')
   @ApiOkResponse({
     description: 'Get product by id.',
@@ -56,6 +55,7 @@ export class ReviewsController {
     return this.reviewsService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @UseGuards(ReviewAccessGuard)
   @Patch(':id')
   @ApiBearerAuth()

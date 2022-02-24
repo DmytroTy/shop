@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post, Request } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PaymentService } from './payment.service';
 
 @ApiTags('payment')
@@ -8,6 +9,7 @@ import { PaymentService } from './payment.service';
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get('client-token')
   @ApiOkResponse({
     description: 'Get client token.',
@@ -25,6 +27,7 @@ export class PaymentController {
     return this.paymentService.createClientToken(req.user);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('checkout')
   @ApiCreatedResponse({
     description: 'Successfully checkout.',

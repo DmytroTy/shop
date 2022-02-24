@@ -2,7 +2,6 @@ import { ClassSerializerInterceptor, Controller, DefaultValuePipe, Get, Param, P
 import { ApiNotFoundResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { AddReviewsInterceptor } from './api/middleware/add-reviews.interceptor';
-import { SkipAuth } from '../decorators/skip-auth.decorator';
 import { Product } from './product.entity';
 import { ProductsService } from './products.service';
 
@@ -12,7 +11,6 @@ import { ProductsService } from './products.service';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @SkipAuth()
   @Get()
   @ApiOkResponse({
     description: 'Get all products.',
@@ -32,9 +30,8 @@ export class ProductsController {
     });
   }
 
-  @SkipAuth()
-  @UseInterceptors(AddReviewsInterceptor)
   @Get(':id')
+  @UseInterceptors(AddReviewsInterceptor)
   @ApiOkResponse({
     description: 'Get product by id.',
     type: Product,

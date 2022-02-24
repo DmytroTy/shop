@@ -3,8 +3,8 @@ import { ApiBearerAuth, ApiBody, ApiConflictResponse, ApiCreatedResponse, ApiInt
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from "express";
 import { AuthService } from './auth/auth.service';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { LocalAuthGuard } from './auth/guards/local-auth.guard';
-import { SkipAuth } from './decorators/skip-auth.decorator';
 import { Buyer } from './buyers/buyer.entity';
 import { CreateBuyerDto } from './buyers/dto/create-buyer.dto';
 import { BuyersService } from './buyers/buyers.service';
@@ -17,7 +17,6 @@ export class AppController {
     private buyersService: BuyersService,
   ) {}
 
-  @SkipAuth()
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   @ApiCreatedResponse({
@@ -48,7 +47,6 @@ export class AppController {
     return this.authService.login(req.user);
   }
 
-  @SkipAuth()
   @Post('auth/register')
   @HttpCode(HttpStatus.CREATED)
   @ApiCreatedResponse({
@@ -61,16 +59,14 @@ export class AppController {
     return this.authService.register(createBuyerDto);
   }
 
-  @SkipAuth()
-  @Get("/facebook")
   @UseGuards(AuthGuard("facebook"))
+  @Get("/facebook")
   async facebookLogin(): Promise<any> {
     return HttpStatus.OK;
   }
 
-  @SkipAuth()
-  @Get("/facebook/redirect")
   @UseGuards(AuthGuard("facebook"))
+  @Get("/facebook/redirect")
   @ApiCreatedResponse({
     description: 'User successfully logined by facebook.',
     schema: {
@@ -86,9 +82,10 @@ export class AppController {
     return this.authService.facebookLogin(req.user);
   }
 
-  @ApiBearerAuth()
-  @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(JwtAuthGuard)
   @Get('profile')
+  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth()
   @ApiOkResponse({
     description: 'Get profile.',
     type: Buyer,

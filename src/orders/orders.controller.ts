@@ -1,6 +1,7 @@
-import { ClassSerializerInterceptor, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Query, Request, UseInterceptors } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Pagination } from 'nestjs-typeorm-paginate';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Order } from './order.entity';
 import { OrdersService } from './orders.service';
 
@@ -11,6 +12,7 @@ import { OrdersService } from './orders.service';
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   @ApiOkResponse({
     description: 'Get all orders.',
@@ -32,6 +34,7 @@ export class OrdersController {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   @ApiOkResponse({
     description: 'Get order by id.',
