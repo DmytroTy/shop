@@ -14,8 +14,12 @@ export class ReviewsService {
   ) {}
 
   async create(createReviewDto: CreateReviewDto, userId: number): Promise<Review> {
+    const product = { id: createReviewDto.productId };
+    delete createReviewDto.productId;
+
     return this.reviewsRepository.save({
       buyer: { id: userId },
+      product,
       ...createReviewDto,
     });
   }
