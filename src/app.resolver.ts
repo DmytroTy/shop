@@ -3,8 +3,9 @@ import { Args, Field, Mutation, ObjectType, Query, Resolver } from '@nestjs/grap
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from "express";
 import { AuthService } from './auth/auth.service';
-import { LocalAuthGuard } from './auth/guards/local-auth.guard';
-import { SkipAuth } from './decorators/skip-auth.decorator';
+import { GqlJwtAuthGuard } from './auth/guards/gql-jwt-auth.guard';
+import { GqlLocalAuthGuard } from './auth/guards/gql-local-auth.guard';
+import { CurrentUser } from './decorators/current-user.decorator';
 import { Buyer } from './buyers/buyer.entity';
 import { CreateBuyerDto } from './buyers/dto/create-buyer.dto';
 import { BuyersService } from './buyers/buyers.service';
@@ -23,18 +24,15 @@ export class AppResolver {
     private buyersService: BuyersService,
   ) {}
 
-  @SkipAuth()
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(GqlLocalAuthGuard)
   @Mutation(returns => LoginResult)
-  login(@Req() req: Request, @Args('loginData') loginData: LoginInput) {
-    // loginData
-    return this.authService.login(req.user);
+  login(@Args('loginData') loginData: LoginInput,  @CurrentUser() user: Buyer) {
+    // loginData is used only by GqlLocalAuthGuard but not directly in this method
+    return this.authService.login(user);
   }
 
-  @SkipAuth()
   @Mutation(returns => Buyer)
   @UseInterceptors(ClassSerializerInterceptor)
-  // @HttpCode(HttpStatus.CREATED)
   register(@Args('createBuyerData') createBuyerData: CreateBuyerDto) {
     return this.authService.register(createBuyerData);
   }
@@ -53,10 +51,10 @@ export class AppResolver {
     return this.authService.facebookLogin(req.user);
   } */
 
-  // @ApiBearerAuth()
+  @UseGuards(GqlJwtAuthGuard)
   @Query(returns => Buyer, { name: 'profile' })
   @UseInterceptors(ClassSerializerInterceptor)
-  getProfile(@Req() req): Promise<Buyer> {
-    return this.buyersService.findOne(req.user.email);
+  getProfile(@CurrentUser() user: Buyer): Promise<Buyer> {
+    return this.buyersService.findOne(user.email);
   }
 }

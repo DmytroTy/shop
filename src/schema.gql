@@ -88,7 +88,7 @@ type Mutation {
   updateReview(id: Int!, updateReviewData: UpdateReviewInput!): Review!
 }
 
-"""Data for authorization"""
+"""Data for authentication"""
 input LoginInput {
   email: String!
   password: String!
@@ -111,11 +111,7 @@ input UpdateBuyerInput {
 input CreateReviewDto {
   rating: Int
   comment: String!
-  product: IdType!
-}
-
-input IdType {
-  id: Int!
+  productId: Int!
 }
 
 input UpdateReviewInput {

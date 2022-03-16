@@ -1,10 +1,11 @@
-import { Request, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { Args, Int, Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { UpdateResult } from 'typeorm';
 import { ReviewAccessGuard } from './api/middleware/review-access.guard';
+import { GqlJwtAuthGuard } from '../auth/guards/gql-jwt-auth.guard';
 import { PaginationArgs } from '../dto/pagination.args';
-import { SkipAuth } from '../decorators/skip-auth.decorator';
+import { CurrentUser } from '../decorators/current-user.decorator';
 import { Review } from './review.entity';
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
@@ -18,13 +19,12 @@ export class PaginatedReview extends Paginated(Review) {}
 export class ReviewsResolver {
   constructor(private readonly reviewsService: ReviewsService) {}
 
+  @UseGuards(GqlJwtAuthGuard)
   @Mutation(returns => Review)
-  // @ApiBearerAuth()
-  createReview(@Args('createReviewData') createReviewData: CreateReviewDto, @Request() req): Promise<Review> {
-    return this.reviewsService.create(createReviewData, req.user.userId);
+  createReview(@Args('createReviewData') createReviewData: CreateReviewDto, @CurrentUser() user): Promise<Review> {
+    return this.reviewsService.create(createReviewData, user.userId);
   }
 
-  @SkipAuth()
   @Query(returns => PaginatedReview, { nullable: true })
   reviews(
     @Args('productId', { type: () => Int }) productId: number,
@@ -33,15 +33,14 @@ export class ReviewsResolver {
     return this.reviewsService.findByProductId(productId, paginationArgs);
   }
 
-  @SkipAuth()
   @Query(returns => Review, { nullable: true })
   review(@Args('id', { type: () => Int }) id: number): Promise<Review> {
     return this.reviewsService.findOne(id);
   }
 
+  @UseGuards(GqlJwtAuthGuard)
   @UseGuards(ReviewAccessGuard)
   @Mutation(returns => Review)
-  // @ApiBearerAuth()
   updateReview(
     @Args({ name: 'id', type: () => Int }) id: number,
     @Args('updateReviewData') updateReviewData: UpdateReviewInput,
