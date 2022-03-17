@@ -10,17 +10,17 @@ import { Paginated } from '../types/paginated.type';
 @ObjectType()
 class PaginatedProduct extends Paginated(Product) {}
 
-@Resolver(/* of => Product */)
+@Resolver()
 @UseInterceptors(ClassSerializerInterceptor)
 export class ProductsResolver {
   constructor(private readonly productsService: ProductsService) {}
 
-  @Query(returns => PaginatedProduct, { nullable: true })
+  @Query(returns => PaginatedProduct)
   products(@Args() paginationArgs: PaginationArgs): Promise<Pagination<Product>> {
     return this.productsService.findAll(paginationArgs);
   }
 
-  @Query(returns => Product, { nullable: true })
+  @Query(returns => Product)
   @UseInterceptors(AddReviewsInterceptor)
   product(@Args('id', { type: () => Int }) id: number): Promise<Product> {
     return this.productsService.findOne(id);

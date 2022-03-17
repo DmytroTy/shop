@@ -82,12 +82,12 @@ type PaginatedProduct {
 
 type Query {
   profile: Buyer!
-  products(page: Int = 1, limit: Int = 10): PaginatedProduct
-  product(id: Int!): Product
-  reviews(productId: Int!, page: Int = 1, limit: Int = 10): PaginatedReview
-  review(id: Int!): Review
-  orders(page: Int = 1, limit: Int = 10): PaginatedOrder
-  order(id: Int!): Order
+  products(page: Int = 1, limit: Int = 10): PaginatedProduct!
+  product(id: Int!): Product!
+  reviews(productId: Int!, page: Int = 1, limit: Int = 10): PaginatedReview!
+  review(id: Int!): Review!
+  orders(page: Int = 1, limit: Int = 10): PaginatedOrder!
+  order(id: Int!): Order!
   getClientToken: ClientTokenResult!
 }
 

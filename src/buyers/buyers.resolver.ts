@@ -6,7 +6,7 @@ import { BuyersService } from './buyers.service';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { UpdateBuyerInput } from './dto/update-buyer.input';
 
-@Resolver(/* of => Buyer */)
+@Resolver()
 @UseGuards(GqlJwtAuthGuard)
 export class BuyersResolver {
   constructor(private readonly buyersService: BuyersService) {}

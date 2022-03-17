@@ -4,11 +4,13 @@ import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginat
 import { Repository, UpdateResult } from 'typeorm';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
+import { LoggerWinston } from '../logger/logger-winston.service';
 import { Review } from './review.entity';
 
 @Injectable()
 export class ReviewsService {
   constructor(
+    private readonly logger: LoggerWinston,
     @InjectRepository(Review)
     private reviewsRepository: Repository<Review>,
   ) {}
@@ -36,7 +38,10 @@ export class ReviewsService {
   async findOne(id: number): Promise<Review> {
     const review = await this.reviewsRepository.findOne(id);
 
-    if (!review) throw new NotFoundException();
+    if (!review) {
+      this.logger.warn(`User error: Review with id = ${id} not found.`, 'ReviewsService');
+      throw new NotFoundException();
+    }
 
     return review;
   }

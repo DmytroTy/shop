@@ -12,17 +12,17 @@ import { Paginated } from '../types/paginated.type';
 export class PaginatedOrder extends Paginated(Order) {}
 
 @UseGuards(GqlJwtAuthGuard)
-@Resolver(/* of => Order */)
+@Resolver()
 @UseInterceptors(ClassSerializerInterceptor)
 export class OrdersResolver {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @Query(returns => PaginatedOrder, { nullable: true })
+  @Query(returns => PaginatedOrder)
   orders(@CurrentUser() user, @Args() paginationArgs: PaginationArgs): Promise<Pagination<Order>> {
     return this.ordersService.findAll(user.userId, paginationArgs);
   }
 
-  @Query(returns => Order, { nullable: true })
+  @Query(returns => Order)
   order(@Args('id', { type: () => Int }) id: number, @CurrentUser() user): Promise<Order> {
     return this.ordersService.findOne(id, user.userId);
   }

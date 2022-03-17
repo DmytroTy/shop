@@ -14,7 +14,7 @@ import { Paginated } from '../types/paginated.type';
 @ObjectType()
 export class PaginatedReview extends Paginated(Review) {}
 
-@Resolver(/* of => Review */)
+@Resolver()
 export class ReviewsResolver {
   constructor(private readonly reviewsService: ReviewsService) {}
 
@@ -24,7 +24,7 @@ export class ReviewsResolver {
     return this.reviewsService.create(createReviewData, user.userId);
   }
 
-  @Query(returns => PaginatedReview, { nullable: true })
+  @Query(returns => PaginatedReview)
   reviews(
     @Args('productId', { type: () => Int }) productId: number,
     @Args() paginationArgs: PaginationArgs,
@@ -32,7 +32,7 @@ export class ReviewsResolver {
     return this.reviewsService.findByProductId(productId, paginationArgs);
   }
 
-  @Query(returns => Review, { nullable: true })
+  @Query(returns => Review)
   review(@Args('id', { type: () => Int }) id: number): Promise<Review> {
     return this.reviewsService.findOne(id);
   }
