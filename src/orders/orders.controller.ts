@@ -9,10 +9,10 @@ import { OrdersService } from './orders.service';
 @ApiBearerAuth()
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('orders')
+@UseGuards(JwtAuthGuard)
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   @ApiOkResponse({
     description: 'Get all orders.',
@@ -34,7 +34,6 @@ export class OrdersController {
     });
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   @ApiOkResponse({
     description: 'Get order by id.',

@@ -6,10 +6,10 @@ import { PaymentService } from './payment.service';
 @ApiTags('payment')
 @ApiBearerAuth()
 @Controller('payment')
+@UseGuards(JwtAuthGuard)
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get('client-token')
   @ApiOkResponse({
     description: 'Get client token.',
@@ -27,7 +27,6 @@ export class PaymentController {
     return this.paymentService.createClientToken(req.user);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('checkout')
   @ApiCreatedResponse({
     description: 'Successfully checkout.',
