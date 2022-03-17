@@ -25,13 +25,13 @@ export class BuyersService {
     return this.buyersRepository.findOne({ facebookId });
   }
 
-  async update(id: number, updateBuyerDto: UpdateBuyerDto, userId: number): Promise<UpdateResult> {
+  async update(id: number, updateBuyerDto: UpdateBuyerDto, userId: number): Promise<Buyer> {
     if (updateBuyerDto.password) {
       const saltOrRounds = 10;
       const pass = updateBuyerDto.password;
       updateBuyerDto.password = await bcrypt.hash(pass, saltOrRounds);
     }
-    return this.buyersRepository.update(userId, updateBuyerDto);
+    return this.buyersRepository.save({ id: userId, ...updateBuyerDto });
   }
 
   async remove(id: number): Promise<UpdateResult> {

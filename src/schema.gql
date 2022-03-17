@@ -94,7 +94,7 @@ type Query {
 type Mutation {
   login(loginData: LoginInput!): LoginResult!
   register(createBuyerData: CreateBuyerDto!): Buyer!
-  updateBuyer(id: Int!, updateBuyerData: UpdateBuyerInput!): Buyer!
+  updateProfile(id: Int!, updateBuyerData: UpdateBuyerInput!): Buyer!
   createReview(createReviewData: CreateReviewDto!): Review!
   updateReview(id: Int!, updateReviewData: UpdateReviewInput!): Review!
   checkout(checkoutData: CheckoutInput!): CheckoutResult!
