@@ -41,8 +41,8 @@ export class ReviewsService {
     return review;
   }
 
-  async update(id: number, updateReviewDto: UpdateReviewDto): Promise<UpdateResult> {
-    return this.reviewsRepository.update(id, updateReviewDto);
+  async update(id: number, updateReviewDto: UpdateReviewDto): Promise<Review> {
+    return this.reviewsRepository.save({ id, ...updateReviewDto });
   }
 
   async remove(id: number): Promise<UpdateResult> {

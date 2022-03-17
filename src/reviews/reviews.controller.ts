@@ -1,6 +1,6 @@
 import { ReviewAccessGuard } from './api/middleware/review-access.guard';
 import { Controller, Get, Post, Body, Patch, Param, Request, Query, DefaultValuePipe, ParseIntPipe, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Review } from './review.entity';
@@ -21,7 +21,7 @@ export class ReviewsController {
     type: Review,
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
-  create(@Body() createReviewDto: CreateReviewDto, @Request() req) {
+  create(@Body() createReviewDto: CreateReviewDto, @Request() req): Promise<Review> {
     return this.reviewsService.create(createReviewDto, req.user.userId);
   }
 
@@ -51,21 +51,22 @@ export class ReviewsController {
     type: Review,
   })
   @ApiNotFoundResponse({ description: 'No record with this ID found!' })
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id') id: number): Promise<Review> {
     return this.reviewsService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @UseGuards(ReviewAccessGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @ApiBearerAuth()
   @ApiOkResponse({
     description: 'The record of review has been successfully updated.',
     type: Review,
   })
+  @ApiBadRequestResponse({ description: 'Bad Request!'})
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
   @ApiForbiddenResponse({ description: 'Forbidden!'})
-  update(@Param('id') id: number, @Body() updateReviewDto: UpdateReviewDto) {
+  update(@Param('id') id: number, @Body() updateReviewDto: UpdateReviewDto): Promise<Review> {
     return this.reviewsService.update(id, updateReviewDto);
   }
 }

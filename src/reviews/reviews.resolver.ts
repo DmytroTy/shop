@@ -1,7 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Int, Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
 import { Pagination } from 'nestjs-typeorm-paginate';
-import { UpdateResult } from 'typeorm';
 import { ReviewAccessGuard } from './api/middleware/review-access.guard';
 import { GqlJwtAuthGuard } from '../auth/guards/gql-jwt-auth.guard';
 import { PaginationArgs } from '../dto/pagination.args';
@@ -38,13 +37,13 @@ export class ReviewsResolver {
     return this.reviewsService.findOne(id);
   }
 
-  @UseGuards(GqlJwtAuthGuard)
   @UseGuards(ReviewAccessGuard)
+  @UseGuards(GqlJwtAuthGuard)
   @Mutation(returns => Review)
   updateReview(
     @Args({ name: 'id', type: () => Int }) id: number,
     @Args('updateReviewData') updateReviewData: UpdateReviewInput,
-  ): Promise<UpdateResult> {
+  ): Promise<Review> {
     return this.reviewsService.update(id, updateReviewData);
   }
 }
