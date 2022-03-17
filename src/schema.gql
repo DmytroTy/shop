@@ -65,6 +65,16 @@ type LoginResult {
   accessToken: String!
 }
 
+"""Client token response"""
+type ClientTokenResult {
+  clientToken: String!
+}
+
+"""Checkout response"""
+type CheckoutResult {
+  success: Boolean!
+}
+
 type PaginatedProduct {
   items: [Product]!
   meta: MetaType!
@@ -78,6 +88,7 @@ type Query {
   review(id: Int!): Review
   orders(page: Int = 1, limit: Int = 10): PaginatedOrder
   order(id: Int!): Order
+  getClientToken: ClientTokenResult!
 }
 
 type Mutation {
@@ -86,6 +97,7 @@ type Mutation {
   updateBuyer(id: Int!, updateBuyerData: UpdateBuyerInput!): Buyer!
   createReview(createReviewData: CreateReviewDto!): Review!
   updateReview(id: Int!, updateReviewData: UpdateReviewInput!): Review!
+  checkout(checkoutData: CheckoutInput!): CheckoutResult!
 }
 
 """Data for authentication"""
@@ -117,4 +129,17 @@ input CreateReviewDto {
 input UpdateReviewInput {
   rating: Int
   comment: String
+}
+
+"""Data for checkout"""
+input CheckoutInput {
+  paymentMethodNonce: String!
+  clientDeviceData: String
+  orderProducts: [ProductInput!]!
+}
+
+"""Product data for checkout"""
+input ProductInput {
+  id: Int!
+  quantity: Int!
 }
