@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Patch, Request, UseGuards } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Param, Patch, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiOkResponse, ApiBearerAuth, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Buyer } from './buyer.entity';
@@ -7,6 +7,7 @@ import { UpdateBuyerDto } from './dto/update-buyer.dto';
 
 @ApiTags('buyers')
 @ApiBearerAuth()
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('buyers')
 export class BuyersController {
   constructor(private readonly buyersService: BuyersService) {}
