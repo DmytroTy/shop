@@ -2,8 +2,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { Order } from '../orders/order.entity';
-import { PaginatedOrder } from '../orders/orders.resolver';
+import { Order, PaginatedOrder } from '../orders/order.entity';
 
 @ObjectType({ description: 'Buyer model' })
 @Entity()

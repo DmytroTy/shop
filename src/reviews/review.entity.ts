@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Buyer } from '../buyers/buyer.entity';
 import { Product } from '../products/product.entity';
+import { Paginated } from '../types/paginated.type';
 
 @ObjectType({ description: 'Review model' })
 @Entity()
@@ -33,3 +34,6 @@ export class Review {
   @ManyToOne(type => Buyer)
   buyer: Buyer;
 }
+
+@ObjectType()
+export class PaginatedReview extends Paginated(Review) {}

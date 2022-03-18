@@ -2,13 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-"""Review model"""
-type Review {
-  id: Int!
-  rating: Int
-  comment: String!
-}
-
 """Pagination metainformation"""
 type MetaType {
   totalItems: Int!
@@ -16,6 +9,13 @@ type MetaType {
   itemsPerPage: Int!
   totalPages: Int!
   currentPage: Int!
+}
+
+"""Review model"""
+type Review {
+  id: Int!
+  rating: Int
+  comment: String!
 }
 
 type PaginatedReview {

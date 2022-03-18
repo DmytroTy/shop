@@ -3,8 +3,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Buyer } from '../buyers/buyer.entity';
-import { Product } from '../products/product.entity';
 import { Status } from '../enums/status.enum';
+import { Product } from '../products/product.entity';
+import { Paginated } from '../types/paginated.type';
 
 @ObjectType({ description: 'Order model' })
 @Entity()
@@ -35,3 +36,6 @@ export class Order {
   @Column("simple-json")
   orderProducts: Product[];
 }
+
+@ObjectType()
+export class PaginatedOrder extends Paginated(Order) {}

@@ -2,8 +2,7 @@ import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, Check, OneToMany } from 'typeorm';
-import { Review } from '../reviews/review.entity';
-import { PaginatedReview } from '../reviews/reviews.resolver';
+import { PaginatedReview, Review } from '../reviews/review.entity';
 
 @ObjectType({ description: 'Product model' })
 @Entity()
