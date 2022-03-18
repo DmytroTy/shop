@@ -1,7 +1,6 @@
-import { Req, HttpStatus, UseGuards, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
-import { Args, Field, Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
+import { HttpStatus, UseGuards, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
+import { Args, Field, Int, Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from "express";
 import { AuthService } from './auth/auth.service';
 import { GqlJwtAuthGuard } from './auth/guards/gql-jwt-auth.guard';
 import { GqlLocalAuthGuard } from './auth/guards/gql-local-auth.guard';
@@ -37,18 +36,16 @@ export class AppResolver {
     return this.authService.register(createBuyerData);
   }
 
-  /* @SkipAuth()
-  @Get("/facebook")
-  @UseGuards(AuthGuard("facebook"))
-  facebookLogin(): Promise<any> {
+  /* @Query(returns => Int)
+  @UseGuards(AuthGuard('facebook'))
+  facebookLogin(): any {
     return HttpStatus.OK;
   }
 
-  @SkipAuth()
-  @Get("/facebook/redirect")
-  @UseGuards(AuthGuard("facebook"))
-  facebookLoginRedirect(@Req() req: Request): Promise<any> {
-    return this.authService.facebookLogin(req.user);
+  @Query(returns => LoginResult)
+  @UseGuards(AuthGuard('facebook'))
+  facebookLoginRedirect(@CurrentUser() user: Buyer): Promise<any> {
+    return this.authService.facebookLogin(user);
   } */
 
   @UseGuards(GqlJwtAuthGuard)
