@@ -1,15 +1,16 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, Min, Max } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsInt, IsNotEmpty, IsOptional, Min, Max } from 'class-validator';
 
 @InputType()
 export class CreateReviewDto {
   @Field(type => Int, { nullable: true })
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsInt()
   @Min(1)
   @Max(5)
-  readonly rating: number;
+  readonly rating?: number;
 
   @Field()
   @ApiProperty()

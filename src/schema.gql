@@ -109,7 +109,7 @@ input LoginInput {
 input CreateBuyerDto {
   email: String!
   username: String!
-  password: String
+  password: String!
   facebookId: String
 }
 

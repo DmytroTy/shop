@@ -14,7 +14,7 @@ export class CreateBuyerDto {
   @IsNotEmpty()
   readonly username: string;
 
-  @Field({ nullable: true })
+  @Field()
   @ApiProperty()
   @IsNotEmpty()
   password?: string;
