@@ -2,7 +2,7 @@ import { ClassSerializerInterceptor, Controller, DefaultValuePipe, Get, Param, P
 import { ApiNotFoundResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { AddReviewsInterceptor } from './api/middleware/add-reviews.interceptor';
-import { Product } from './product.entity';
+import { PaginatedProduct, Product } from './product.entity';
 import { ProductsService } from './products.service';
 
 @ApiTags('products')
@@ -14,7 +14,7 @@ export class ProductsController {
   @Get()
   @ApiOkResponse({
     description: 'Get all products.',
-    type: Pagination,
+    type: PaginatedProduct,
   })
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'limit', required: false })

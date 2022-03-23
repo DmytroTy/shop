@@ -3,7 +3,7 @@ import { Controller, Get, Post, Body, Patch, Param, Request, Query, DefaultValue
 import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { Review } from './review.entity';
+import { PaginatedReview, Review } from './review.entity';
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
@@ -28,7 +28,7 @@ export class ReviewsController {
   @Get()
   @ApiOkResponse({
     description: 'Get reviews by productId.',
-    type: Pagination,
+    type: PaginatedReview,
   })
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'limit', required: false })

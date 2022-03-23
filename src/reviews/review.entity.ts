@@ -26,11 +26,9 @@ export class Review {
   @Column("text")
   comment: string;
 
-  // @Field(type => Product)
   @ManyToOne(type => Product, product => product.reviews)
   product: Product;
 
-  // @Field(type => Buyer)
   @ManyToOne(type => Buyer)
   buyer: Buyer;
 }

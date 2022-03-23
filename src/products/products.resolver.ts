@@ -1,14 +1,10 @@
 import { ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
-import { Args, Int, ObjectType, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Query, Resolver } from '@nestjs/graphql';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { AddReviewsInterceptor } from './api/middleware/add-reviews.interceptor';
 import { PaginationArgs } from '../dto/pagination.args';
-import { Product } from './product.entity';
+import { PaginatedProduct, Product } from './product.entity';
 import { ProductsService } from './products.service';
-import { Paginated } from '../types/paginated.type';
-
-@ObjectType()
-class PaginatedProduct extends Paginated(Product) {}
 
 @Resolver()
 @UseInterceptors(ClassSerializerInterceptor)

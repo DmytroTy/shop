@@ -1,8 +1,9 @@
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { Entity, Column, DeleteDateColumn, PrimaryGeneratedColumn, Check, OneToMany } from 'typeorm';
+import { Check, Column, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { PaginatedReview, Review } from '../reviews/review.entity';
+import { Paginated } from '../types/paginated.type';
 
 @ObjectType({ description: 'Product model' })
 @Entity()
@@ -38,6 +39,10 @@ export class Product {
   deletedAt?: Date;
 
   @Field(type => PaginatedReview, { nullable: true })
+  // @ApiProperty({ type: PaginatedReview })
   @OneToMany(type => Review, review => review.product)
   reviews?: Review[];
 }
+
+@ObjectType()
+export class PaginatedProduct extends Paginated(Product) {}

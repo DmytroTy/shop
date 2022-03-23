@@ -2,7 +2,7 @@ import { ClassSerializerInterceptor, Controller, DefaultValuePipe, Get, Param, P
 import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { Order } from './order.entity';
+import { Order, PaginatedOrder } from './order.entity';
 import { OrdersService } from './orders.service';
 
 @ApiTags('orders')
@@ -16,7 +16,7 @@ export class OrdersController {
   @Get()
   @ApiOkResponse({
     description: 'Get all orders.',
-    type: Pagination,
+    type: PaginatedOrder,
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized forbidden!' })
   @ApiQuery({ name: 'page', required: false })
