@@ -2,6 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""Category model"""
+type Category {
+  id: Int!
+  name: String!
+  parent: Category
+  child: [Category]!
+}
+
 """Pagination metainformation"""
 type MetaType {
   totalItems: Int!
@@ -30,7 +38,13 @@ type Product {
   color: String!
   price: Float!
   quantity: Int!
+  categories: [Category!]!
   reviews: PaginatedReview
+}
+
+type PaginatedProduct {
+  items: [Product]!
+  meta: MetaType!
 }
 
 """Order model"""
@@ -75,11 +89,6 @@ type CheckoutResult {
   success: Boolean!
 }
 
-type PaginatedProduct {
-  items: [Product]!
-  meta: MetaType!
-}
-
 type Query {
   profile: Buyer!
   products(page: Int = 1, limit: Int = 10): PaginatedProduct!
@@ -89,6 +98,8 @@ type Query {
   orders(page: Int = 1, limit: Int = 10): PaginatedOrder!
   order(id: Int!): Order!
   getClientToken: ClientTokenResult!
+  categories: [Category!]!
+  category(id: Int!): Category!
 }
 
 type Mutation {
