@@ -42,7 +42,7 @@ export class Product {
   @Field(type => [Category])
   @ApiProperty({ type: [Category] })
   @ManyToMany(type => Category, category => category.products)
-  categories: Category[];
+  categories?: Category[];
 
   @Field(type => PaginatedReview, { nullable: true })
   // @ApiProperty({ type: PaginatedReview })
