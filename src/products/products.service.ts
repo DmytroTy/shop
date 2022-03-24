@@ -24,7 +24,7 @@ export class ProductsService {
   }
 
   async findOne(id: number): Promise<Product> {
-    const product = await this.productsRepository.findOne(id);
+    const product = await this.productsRepository.findOne(id, { relations: ['categories'] });
 
     if (!product) {
       this.logger.warn(`User error: Product with id = ${id} not found.`, 'ProductsService');

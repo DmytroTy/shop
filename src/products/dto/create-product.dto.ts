@@ -1,6 +1,7 @@
 import { Field, Float, InputType, Int } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsNumber, IsPositive, Min } from 'class-validator';
+import { ArrayNotEmpty, IsArray, IsInt, IsNotEmpty, IsNumber, IsPositive, Min } from 'class-validator';
+import { Category } from '../../categories/category.entity';
 
 @InputType()
 export class CreateProductDto {
@@ -25,4 +26,10 @@ export class CreateProductDto {
   @IsInt()
   @Min(0)
   readonly quantity: number;
+
+  @Field(type => [Category])
+  @ApiProperty()
+  @IsArray()
+  @ArrayNotEmpty()
+  readonly categories: Category[];
 }
