@@ -9,6 +9,7 @@ import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { BuyersModule } from './buyers/buyers.module';
+import { CategoriesModule } from './categories/categories.module';
 import { LoggerModule } from './logger/logger.module';
 import { MailModule } from './mail/mail.module';
 import { OrdersModule } from './orders/orders.module';
@@ -32,6 +33,7 @@ import { ReviewsModule } from './reviews/reviews.module';
     LoggerModule,
     ReviewsModule,
     MailModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [
