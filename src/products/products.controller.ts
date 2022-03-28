@@ -30,6 +30,26 @@ export class ProductsController {
     });
   }
 
+  @Get('category/:categoryId')
+  @ApiOkResponse({
+    description: 'Get products by categoryId.',
+    type: PaginatedProduct,
+  })
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
+  findByCategory(
+    @Param('categoryId') categoryId: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+  ): Promise<Pagination<Product>> {
+    limit = limit > 100 ? 100 : limit;
+    return this.productsService.findByCategoryId(categoryId, {
+      page,
+      limit,
+      route: `/products/category/${categoryId}`,
+    });
+  }
+
   @Get(':id')
   @UseInterceptors(AddReviewsInterceptor)
   @ApiOkResponse({

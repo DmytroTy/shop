@@ -16,6 +16,14 @@ export class ProductsResolver {
     return this.productsService.findAll(paginationArgs);
   }
 
+  @Query(returns => PaginatedProduct)
+  productsByCategory(
+    @Args('categoryId', { type: () => Int }) categoryId: number,
+    @Args() paginationArgs: PaginationArgs,
+  ): Promise<Pagination<Product>> {
+    return this.productsService.findByCategoryId(categoryId, paginationArgs);
+  }
+
   @Query(returns => Product)
   @UseInterceptors(AddReviewsInterceptor)
   product(@Args('id', { type: () => Int }) id: number): Promise<Product> {

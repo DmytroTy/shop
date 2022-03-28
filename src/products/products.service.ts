@@ -23,6 +23,16 @@ export class ProductsService {
     return paginate<Product>(this.productsRepository, options);
   }
 
+  async findByCategoryId(categoryId: number, options: IPaginationOptions): Promise<Pagination<Product>> {
+    const queryBuilder = this.productsRepository
+      .createQueryBuilder('product')
+      .leftJoin('categories_products', 'cp', 'cp.productId = product.id')
+      .where('cp.categoryId = :categoryId', { categoryId })
+      .orderBy('product.id', 'DESC');
+
+    return paginate<Product>(queryBuilder, options);
+  }
+
   async findOne(id: number): Promise<Product> {
     const product = await this.productsRepository.findOne(id, { relations: ['categories'] });
 
